@@ -14,7 +14,6 @@
 		6DBDD34F2C949FA600BB959B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD34E2C949FA600BB959B /* User.swift */; };
 		6DBDD3522C94A0CA00BB959B /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD3512C94A0CA00BB959B /* Thread.swift */; };
 		6DBDD3542C94A2B800BB959B /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD3532C94A2B800BB959B /* Message.swift */; };
-		6DBDD3572C94A3C800BB959B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6DBDD3562C94A3C800BB959B /* GoogleService-Info.plist */; };
 		6DBDD35A2C94A46900BB959B /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD3592C94A46900BB959B /* FirebaseAnalytics */; };
 		6DBDD35C2C94A46900BB959B /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD35B2C94A46900BB959B /* FirebaseAnalyticsOnDeviceConversion */; };
 		6DBDD35E2C94A46900BB959B /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD35D2C94A46900BB959B /* FirebaseAnalyticsWithoutAdIdSupport */; };
@@ -45,6 +44,8 @@
 		6DBDD4012C94B20F00BB959B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DBDD4002C94B20F00BB959B /* Preview Assets.xcassets */; };
 		6DBDD4062C94B2E500BB959B /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD4052C94B2E500BB959B /* ModelData.swift */; };
 		6DBDD4082C94B33500BB959B /* FirebaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD4072C94B33500BB959B /* FirebaseAPI.swift */; };
+		6DBDD5042C94CDD600BB959B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6DBDD5032C94CDD600BB959B /* GoogleService-Info.plist */; };
+		6DBDD5052C94CDD600BB959B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6DBDD5032C94CDD600BB959B /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,7 +58,6 @@
 		6DBDD34E2C949FA600BB959B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6DBDD3512C94A0CA00BB959B /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		6DBDD3532C94A2B800BB959B /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		6DBDD3562C94A3C800BB959B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6DBDD3F52C94B20E00BB959B /* ASK_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASK_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DBDD3F72C94B20E00BB959B /* ASK_iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASK_iOSApp.swift; sourceTree = "<group>"; };
 		6DBDD3F92C94B20E00BB959B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -66,6 +66,7 @@
 		6DBDD4002C94B20F00BB959B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6DBDD4052C94B2E500BB959B /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		6DBDD4072C94B33500BB959B /* FirebaseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAPI.swift; sourceTree = "<group>"; };
+		6DBDD5032C94CDD600BB959B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,7 +137,7 @@
 				6DBDD3552C94A32500BB959B /* View */,
 				6DBDD3432C949C1E00BB959B /* Assets.xcassets */,
 				6DBDD3482C949C1E00BB959B /* ASK.entitlements */,
-				6DBDD3562C94A3C800BB959B /* GoogleService-Info.plist */,
+				6DBDD5032C94CDD600BB959B /* GoogleService-Info.plist */,
 				6DBDD3452C949C1E00BB959B /* Preview Content */,
 			);
 			path = ASK;
@@ -298,7 +299,7 @@
 			files = (
 				6DBDD3472C949C1E00BB959B /* Preview Assets.xcassets in Resources */,
 				6DBDD3442C949C1E00BB959B /* Assets.xcassets in Resources */,
-				6DBDD3572C94A3C800BB959B /* GoogleService-Info.plist in Resources */,
+				6DBDD5042C94CDD600BB959B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +309,7 @@
 			files = (
 				6DBDD4012C94B20F00BB959B /* Preview Assets.xcassets in Resources */,
 				6DBDD3FE2C94B20F00BB959B /* Assets.xcassets in Resources */,
+				6DBDD5052C94CDD600BB959B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

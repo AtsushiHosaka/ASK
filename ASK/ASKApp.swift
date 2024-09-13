@@ -8,19 +8,12 @@
 import SwiftUI
 import FirebaseCore
 
-//class AppDelegate: NSObject, NSApplicationDelegate {
-//    func applicationDidFinishLaunching(_ notification: Notification) {
-//        // Initialize Firebase
-//    }
-//}
-
 @main
 struct ASKApp: App {
     init() {
         FirebaseApp.configure()
     }
     
-//    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var modelData = ModelData()
 
     var body: some Scene {
