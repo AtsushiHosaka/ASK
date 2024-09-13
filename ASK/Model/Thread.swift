@@ -11,5 +11,5 @@ struct Thread: Hashable, Codable, Identifiable {
     var id: UUID
     var title: String
     var createDate: Date
-    var member: [User]
+    var member: [UUID]
 }
