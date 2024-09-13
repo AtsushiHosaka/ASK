@@ -17,12 +17,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 @main
 struct ASKApp: App {
-    // Create the application delegate
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    @StateObject private var modelData = ModelData()
 
     var body: some Scene {
         WindowGroup {
             MessageView()
+                .environmentObject(modelData)
         }
     }
 }
