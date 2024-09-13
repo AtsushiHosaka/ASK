@@ -26,11 +26,13 @@ struct MessageView: View {
                                         .font(.subheadline)
                                     
                                     // ユーザー情報を表示
-                                    ForEach(thread.member!) { user in
-                                        if let userId = user.id {  // Userのidをアンラップ
-                                            HStack {
-                                                Text("User: \(user.name)")
-                                                Text("ID: \(userId)")
+                                    if let member = thread.member {
+                                        ForEach(member) { user in
+                                            if let userId = user.id {  // Userのidをアンラップ
+                                                HStack {
+                                                    Text("User: \(user.name)")
+                                                    Text("ID: \(userId)")
+                                                }
                                             }
                                         }
                                     }

@@ -112,8 +112,8 @@
 		6DBDD3312C949C1D00BB959B = {
 			isa = PBXGroup;
 			children = (
-				6DBDD3F62C94B20E00BB959B /* ASK_iOS */,
 				6DBDD33C2C949C1D00BB959B /* ASK */,
+				6DBDD3F62C94B20E00BB959B /* ASK_iOS */,
 				6DBDD33B2C949C1D00BB959B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -482,11 +482,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.hosaka.AS.ASK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -513,11 +512,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.hosaka.AS.ASK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
