@@ -8,29 +8,68 @@
 import SwiftUI
 
 struct MessageView: View {
+    @EnvironmentObject var modelData: ModelData  // ModelDataを@EnvironmentObjectで参照
+    
     var body: some View {
         NavigationSplitView {
-            List {
-                ForEach(1..<3) { item in
-                    NavigationLink {
-                        
-                    } label: {
-                        
+            if modelData.isLoading {
+                ProgressView("Loading...")  // ローディング中に表示
+            } else {
+                List {
+                    ForEach(modelData.threads) { thread in
+                        if let threadId = thread.id {  // Threadのidをアンラップ
+                            NavigationLink {
+                                VStack(alignment: .leading) {
+                                    Text("Thread: \(thread.title)")
+                                        .font(.headline)
+                                    Text("Created on: \(thread.createDate, formatter: dateFormatter)")
+                                        .font(.subheadline)
+                                    
+                                    // ユーザー情報を表示
+                                    ForEach(thread.member!) { user in
+                                        if let userId = user.id {  // Userのidをアンラップ
+                                            HStack {
+                                                Text("User: \(user.name)")
+                                                Text("ID: \(userId)")
+                                            }
+                                        }
+                                    }
+                                }
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    Text(thread.title)
+                                        .font(.headline)
+                                    Text("Created on: \(thread.createDate, formatter: dateFormatter)")
+                                        .font(.subheadline)
+                                }
+                            }
+                        }
                     }
                 }
-//                .onDelete(perform: deleteItems)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
+                .onAppear {
+                    Task {
+                        // 初回表示時にスレッドのリスナーがセットされていることを確認
+                        if modelData.threads.isEmpty {
+                            await modelData.loadThreads()
+                        }
+                    }
                 }
             }
         } detail: {
             Text("Select an item")
         }
     }
+    
+    // 日付のフォーマッタ
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }
 }
 
 #Preview {
     MessageView()
+        .environmentObject(ModelData())  // PreviewにModelDataを注入
 }

@@ -14,7 +14,7 @@ struct User: Hashable, Identifiable, Codable {
     var name: String
     
     private var imageName: String
-    var image: Image {
+    var image: Image? {
         Image(imageName)
     }
 }

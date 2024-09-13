@@ -12,5 +12,7 @@ struct Thread: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
     var title: String
     var createDate: Date
-    var member: [UUID]
+    
+    var memberID: [String]
+    var member: [User]?
 }

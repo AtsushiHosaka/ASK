@@ -18,7 +18,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 @main
 struct ASKApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
     @StateObject private var modelData = ModelData()
 
     var body: some Scene {

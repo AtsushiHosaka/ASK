@@ -112,8 +112,8 @@
 		6DBDD3312C949C1D00BB959B = {
 			isa = PBXGroup;
 			children = (
-				6DBDD33C2C949C1D00BB959B /* ASK */,
 				6DBDD3F62C94B20E00BB959B /* ASK_iOS */,
+				6DBDD33C2C949C1D00BB959B /* ASK */,
 				6DBDD33B2C949C1D00BB959B /* Products */,
 			);
 			sourceTree = "<group>";
