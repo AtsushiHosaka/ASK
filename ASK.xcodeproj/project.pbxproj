@@ -56,7 +56,7 @@
 			children = (
 				6DBDD33D2C949C1D00BB959B /* ASKApp.swift */,
 				6DBDD33F2C949C1D00BB959B /* ContentView.swift */,
-				6DBDD34E2C949FA600BB959B /* User.swift */,
+				6DBDD3502C94A0B100BB959B /* Model */,
 				6DBDD3432C949C1E00BB959B /* Assets.xcassets */,
 				6DBDD3482C949C1E00BB959B /* ASK.entitlements */,
 				6DBDD3452C949C1E00BB959B /* Preview Content */,
@@ -70,6 +70,14 @@
 				6DBDD3462C949C1E00BB959B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		6DBDD3502C94A0B100BB959B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6DBDD34E2C949FA600BB959B /* User.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
