@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Thread: Hashable, Codable, Identifiable {
-    var id: UUID
+    @DocumentID var id: String?
     var title: String
     var createDate: Date
     var member: [UUID]

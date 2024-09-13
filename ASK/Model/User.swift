@@ -7,9 +7,10 @@
 
 import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 struct User: Hashable, Identifiable, Codable {
-    var id: UUID
+    @DocumentID var id: String?
     var name: String
     
     private var imageName: String
