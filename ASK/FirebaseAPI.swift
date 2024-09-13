@@ -12,7 +12,7 @@ class FirebaseAPI {
     private let db = Firestore.firestore()
     
     // 現在ログインしているユーザーのIDがmemberIDに含まれているThreadsを取得し、各Threadのmemberに該当するUserを代入
-    func fetchThreads() async throws -> [Thread] {
+    func fetchThreads() async throws -> [Question] {
         // ログインユーザーを取得
         guard let currentUser = Auth.auth().currentUser else {
             throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
@@ -24,13 +24,14 @@ class FirebaseAPI {
         let snapshot = try await db.collection("threads").getDocuments()
         
         // フィルタリングしてログインしているユーザーが含まれているスレッドだけ返す
-        var threads = try snapshot.documents.compactMap { document -> Thread? in
-            let thread = try document.data(as: Thread.self)
+        var threads = try snapshot.documents.compactMap { document -> Question? in
+            let thread = try document.data(as: Question.self)
             return thread.memberID.contains(userId) ? thread : nil
         }
         
         // memberIDに一致するユーザーを取得してmemberに代入
         for index in threads.indices {
+            print(index)
             let threadMembers = try await fetchUsersByIds(ids: threads[index].memberID)
             threads[index].member = threadMembers
         }

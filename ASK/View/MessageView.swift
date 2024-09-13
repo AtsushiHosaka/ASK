@@ -20,22 +20,23 @@ struct MessageView: View {
                         if let threadId = thread.id {  // Threadのidをアンラップ
                             NavigationLink {
                                 VStack(alignment: .leading) {
-                                    Text("Thread: \(thread.title)")
+                                    Text("Question: \(thread.title)")
                                         .font(.headline)
                                     Text("Created on: \(thread.createDate, formatter: dateFormatter)")
                                         .font(.subheadline)
                                     
                                     // ユーザー情報を表示
-                                    if let member = thread.member {
-                                        ForEach(member) { user in
-                                            if let userId = user.id {  // Userのidをアンラップ
-                                                HStack {
-                                                    Text("User: \(user.name)")
-                                                    Text("ID: \(userId)")
-                                                }
-                                            }
+//                                    if let member = thread.memberID {
+                                    ForEach(thread.memberID, id: \.self) { user in
+//                                            if let userId = user.id {  // Userのidをアンラップ
+//                                                HStack {
+//                                                    Text("User: \(user.name)")
+//                                                    Text("ID: \(userId)")
+//                                                }
+//                                            }
+                                            Text(user)
                                         }
-                                    }
+//                                    }
                                 }
                             } label: {
                                 VStack(alignment: .leading) {

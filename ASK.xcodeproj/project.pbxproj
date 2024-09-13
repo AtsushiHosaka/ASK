@@ -12,7 +12,7 @@
 		6DBDD3442C949C1E00BB959B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DBDD3432C949C1E00BB959B /* Assets.xcassets */; };
 		6DBDD3472C949C1E00BB959B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DBDD3462C949C1E00BB959B /* Preview Assets.xcassets */; };
 		6DBDD34F2C949FA600BB959B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD34E2C949FA600BB959B /* User.swift */; };
-		6DBDD3522C94A0CA00BB959B /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD3512C94A0CA00BB959B /* Thread.swift */; };
+		6DBDD3522C94A0CA00BB959B /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD3512C94A0CA00BB959B /* Question.swift */; };
 		6DBDD3542C94A2B800BB959B /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD3532C94A2B800BB959B /* Message.swift */; };
 		6DBDD35A2C94A46900BB959B /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD3592C94A46900BB959B /* FirebaseAnalytics */; };
 		6DBDD35C2C94A46900BB959B /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD35B2C94A46900BB959B /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -56,7 +56,7 @@
 		6DBDD3462C949C1E00BB959B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6DBDD3482C949C1E00BB959B /* ASK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ASK.entitlements; sourceTree = "<group>"; };
 		6DBDD34E2C949FA600BB959B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		6DBDD3512C94A0CA00BB959B /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
+		6DBDD3512C94A0CA00BB959B /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		6DBDD3532C94A2B800BB959B /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		6DBDD3F52C94B20E00BB959B /* ASK_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASK_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DBDD3F72C94B20E00BB959B /* ASK_iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASK_iOSApp.swift; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				6DBDD34E2C949FA600BB959B /* User.swift */,
-				6DBDD3512C94A0CA00BB959B /* Thread.swift */,
+				6DBDD3512C94A0CA00BB959B /* Question.swift */,
 				6DBDD3532C94A2B800BB959B /* Message.swift */,
 				6DBDD4052C94B2E500BB959B /* ModelData.swift */,
 			);
@@ -324,7 +324,7 @@
 				6DBDD33E2C949C1D00BB959B /* ASKApp.swift in Sources */,
 				6DBDD3542C94A2B800BB959B /* Message.swift in Sources */,
 				6DBDD34F2C949FA600BB959B /* User.swift in Sources */,
-				6DBDD3522C94A0CA00BB959B /* Thread.swift in Sources */,
+				6DBDD3522C94A0CA00BB959B /* Question.swift in Sources */,
 				6DBDD4062C94B2E500BB959B /* ModelData.swift in Sources */,
 				6DBDD4082C94B33500BB959B /* FirebaseAPI.swift in Sources */,
 			);

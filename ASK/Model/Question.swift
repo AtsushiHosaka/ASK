@@ -1,5 +1,5 @@
 //
-//  Thread.swift
+//  Question.swift
 //  ASK
 //
 //  Created by 保坂篤志 on 2024/09/14.
@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct Thread: Hashable, Codable, Identifiable {
+struct Question: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
     var title: String
     var createDate: Date

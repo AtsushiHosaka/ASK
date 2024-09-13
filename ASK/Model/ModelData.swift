@@ -10,7 +10,7 @@ import Combine
 import FirebaseFirestore
 
 class ModelData: ObservableObject {
-    @Published var threads: [Thread] = []  // スレッドを保持
+    @Published var threads: [Question] = []  // スレッドを保持
     @Published var isLoading = false       // ローディング状態
     private var listener: ListenerRegistration?  // Firestoreリスナー
     
@@ -43,7 +43,7 @@ class ModelData: ObservableObject {
             
             // スレッドをデコードして@Published threadsに更新
             self.threads = documents.compactMap { document in
-                try? document.data(as: Thread.self)
+                try? document.data(as: Question.self)
             }
             self.isLoading = false
         }
