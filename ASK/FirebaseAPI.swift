@@ -11,8 +11,8 @@ import FirebaseAuth
 class FirebaseAPI {
     private let db = Firestore.firestore()
     
-    // 現在ログインしているユーザーのIDがmemberIDに含まれているThreadsを取得し、各Threadのmemberに該当するUserを代入
-    func fetchThreads() async throws -> [Question] {
+    // 現在ログインしているユーザーのIDがmemberIDに含まれているQuestionsを取得し、各Questionのmemberに該当するUserを代入
+    func fetchQuestions() async throws -> [Question] {
         // ログインユーザーを取得
         guard let currentUser = Auth.auth().currentUser else {
             throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
@@ -20,23 +20,27 @@ class FirebaseAPI {
         
         let userId = currentUser.uid
         
-        // FirestoreからThreadsを取得
+        // FirestoreからQuestionsを取得
         let snapshot = try await db.collection("threads").getDocuments()
         
         // フィルタリングしてログインしているユーザーが含まれているスレッドだけ返す
-        var threads = try snapshot.documents.compactMap { document -> Question? in
-            let thread = try document.data(as: Question.self)
-            return thread.memberID.contains(userId) ? thread : nil
+        var questions = try snapshot.documents.compactMap { document -> Question? in
+            let question = try document.data(as: Question.self)
+            return question.memberID.contains(userId) ? question : nil
         }
         
         // memberIDに一致するユーザーを取得してmemberに代入
-        for index in threads.indices {
-            print(index)
-            let threadMembers = try await fetchUsersByIds(ids: threads[index].memberID)
-            threads[index].member = threadMembers
+        for index in questions.indices {
+            do {
+                let questionMembers = try await fetchUsersByIds(ids: questions[index].memberID)
+                questions[index].member = questionMembers
+            } catch {
+                print("Failed to fetch members for question \(questions[index].id ?? ""): \(error.localizedDescription)")
+                questions[index].member = []
+            }
         }
         
-        return threads
+        return questions
     }
     
     // ユーザーをIDから取得する関数
@@ -47,11 +51,14 @@ class FirebaseAPI {
             do {
                 let userDocument = try await db.collection("users").document(id).getDocument()
                 
-                let user = try userDocument.data(as: User.self)
-                
-                users.append(user)
+                if let user = try? userDocument.data(as: User.self) {
+                    users.append(user)
+                } else {
+                    // ユーザーが存在しない場合の処理
+                    print("User with ID \(id) not found in database")
+                }
             } catch {
-                // ユーザー取得に失敗した場合はスキップ
+                // ユーザー取得に失敗した場合はログ出力のみ
                 print("Failed to fetch user with ID \(id): \(error.localizedDescription)")
             }
         }

@@ -16,33 +16,34 @@ struct MessageView: View {
                 ProgressView("Loading...")  // ローディング中に表示
             } else {
                 List {
-                    ForEach(modelData.threads) { thread in
-                        if let threadId = thread.id {  // Threadのidをアンラップ
+                    ForEach(modelData.questions) { question in
+                        if let questionId = question.id {  // Questionのidをアンラップ
                             NavigationLink {
                                 VStack(alignment: .leading) {
-                                    Text("Question: \(thread.title)")
+                                    Text("Question: \(question.title)")
                                         .font(.headline)
-                                    Text("Created on: \(thread.createDate, formatter: dateFormatter)")
+                                    Text("Created on: \(question.createDate, formatter: dateFormatter)")
                                         .font(.subheadline)
                                     
-                                    // ユーザー情報を表示
-//                                    if let member = thread.memberID {
-                                    ForEach(thread.memberID, id: \.self) { user in
-//                                            if let userId = user.id {  // Userのidをアンラップ
-//                                                HStack {
-//                                                    Text("User: \(user.name)")
-//                                                    Text("ID: \(userId)")
-//                                                }
-//                                            }
-                                            Text(user)
+                                    if let member = question.member {
+                                        ForEach(member) { user in
+                                            if let userId = user.id {  // Userのidをアンラップ
+                                                HStack {
+                                                    Text("User: \(user.name)")
+                                                    Text("ID: \(userId)")
+                                                }
+                                            }
                                         }
-//                                    }
+                                    }
+                                    ForEach(question.memberID, id: \.self) { user in
+                                        Text(user)
+                                    }
                                 }
                             } label: {
                                 VStack(alignment: .leading) {
-                                    Text(thread.title)
+                                    Text(question.title)
                                         .font(.headline)
-                                    Text("Created on: \(thread.createDate, formatter: dateFormatter)")
+                                    Text("Created on: \(question.createDate, formatter: dateFormatter)")
                                         .font(.subheadline)
                                 }
                             }
@@ -52,8 +53,8 @@ struct MessageView: View {
                 .onAppear {
                     Task {
                         // 初回表示時にスレッドのリスナーがセットされていることを確認
-                        if modelData.threads.isEmpty {
-                            await modelData.loadThreads()
+                        if modelData.questions.isEmpty {
+                            await modelData.loadQuestions()
                         }
                     }
                 }

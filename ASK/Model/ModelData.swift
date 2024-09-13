@@ -10,13 +10,13 @@ import Combine
 import FirebaseFirestore
 
 class ModelData: ObservableObject {
-    @Published var threads: [Question] = []  // スレッドを保持
+    @Published var questions: [Question] = []
     @Published var isLoading = false       // ローディング状態
     private var listener: ListenerRegistration?  // Firestoreリスナー
     
     init() {
         // Firestoreのリアルタイムリスナーを設定
-        addThreadsListener()
+        addQuestionsListener()
     }
     
     deinit {
@@ -25,24 +25,24 @@ class ModelData: ObservableObject {
     }
     
     // Firestoreからスレッドをリアルタイムで監視する関数
-    private func addThreadsListener() {
+    private func addQuestionsListener() {
         isLoading = true
         
-        listener = Firestore.firestore().collection("threads").addSnapshotListener { snapshot, error in
+        listener = Firestore.firestore().collection("questions").addSnapshotListener { snapshot, error in
             if let error = error {
-                print("Error fetching threads: \(error)")
+                print("Error fetching questions: \(error)")
                 self.isLoading = false
                 return
             }
             
             guard let documents = snapshot?.documents else {
-                print("No threads found")
+                print("No questions found")
                 self.isLoading = false
                 return
             }
             
-            // スレッドをデコードして@Published threadsに更新
-            self.threads = documents.compactMap { document in
+            // スレッドをデコードして@Published questionsに更新
+            self.questions = documents.compactMap { document in
                 try? document.data(as: Question.self)
             }
             self.isLoading = false
@@ -50,16 +50,16 @@ class ModelData: ObservableObject {
     }
     
     // 手動でFirestoreからスレッドを取得する関数（必要に応じて使用）
-    func loadThreads() async {
+    func loadQuestions() async {
         do {
             isLoading = true
-            let fetchedThreads = try await FirebaseAPI().fetchThreads()
+            let fetchedQuestions = try await FirebaseAPI().fetchQuestions()
             DispatchQueue.main.async {
-                self.threads = fetchedThreads
+                self.questions = fetchedQuestions
                 self.isLoading = false
             }
         } catch {
-            print("Error fetching threads: \(error)")
+            print("Error fetching questions: \(error)")
             DispatchQueue.main.async {
                 self.isLoading = false
             }
