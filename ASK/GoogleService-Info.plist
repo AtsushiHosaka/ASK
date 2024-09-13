@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBm_VgwJlQ1zl0nAksK6IGY-HaPD-JxkoA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>886386745466</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>app.hosaka.AS.ASK</string>
+	<key>PROJECT_ID</key>
+	<string>ask-project-b50e1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ask-project-b50e1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:886386745466:ios:007a24886dee5e94a11bc3</string>
+</dict>
+</plist>
