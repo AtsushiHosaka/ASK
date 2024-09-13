@@ -13,38 +13,31 @@ class FirebaseAPI {
     
     // 現在ログインしているユーザーのIDがmemberIDに含まれているQuestionsを取得し、各Questionのmemberに該当するUserを代入
     func fetchQuestions() async throws -> [Question] {
-        // ログインユーザーを取得
-        guard let currentUser = Auth.auth().currentUser else {
-            throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
-        }
+        // ログインユーザーを取得します。
+//        guard let currentUser = Auth.auth().currentUser else {
+//            throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
+//        }
+
+        let userId = "as" /*currentUser.uid*/
+
+        // FirestoreからQuestionsを取得します。
+//        let snapshot = try await db.collection("questions").getDocuments()
         
-        let userId = currentUser.uid
-        
-        // FirestoreからQuestionsを取得
-        let snapshot = try await db.collection("threads").getDocuments()
-        
+        let snapshot = try await db.collection("questions").whereField("memberID", arrayContains: userId).getDocuments()
+
         // フィルタリングしてログインしているユーザーが含まれているスレッドだけ返す
-        var questions = try snapshot.documents.compactMap { document -> Question? in
-            let question = try document.data(as: Question.self)
-            return question.memberID.contains(userId) ? question : nil
-        }
-        
-        // memberIDに一致するユーザーを取得してmemberに代入
+        var questions = try snapshot.documents.compactMap { try $0.data(as: Question.self) }
+
         for index in questions.indices {
-            do {
-                let questionMembers = try await fetchUsersByIds(ids: questions[index].memberID)
-                questions[index].member = questionMembers
-            } catch {
-                print("Failed to fetch members for question \(questions[index].id ?? ""): \(error.localizedDescription)")
-                questions[index].member = []
-            }
+            let questionMembers = try await fetchUsersByIds(ids: questions[index].memberID)
+            questions[index].member = questionMembers
         }
         
         return questions
     }
     
     // ユーザーをIDから取得する関数
-    private func fetchUsersByIds(ids: [String]) async throws -> [User] {
+    func fetchUsersByIds(ids: [String]) async throws -> [User] {
         var users: [User] = []
         
         for id in ids {

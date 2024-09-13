@@ -10,6 +10,7 @@ import Combine
 import FirebaseFirestore
 
 class ModelData: ObservableObject {
+    @Published var users: [User] = []
     @Published var questions: [Question] = []
     @Published var isLoading = false       // ローディング状態
     private var listener: ListenerRegistration?  // Firestoreリスナー
@@ -28,7 +29,7 @@ class ModelData: ObservableObject {
     private func addQuestionsListener() {
         isLoading = true
         
-        listener = Firestore.firestore().collection("questions").addSnapshotListener { snapshot, error in
+        listener = Firestore.firestore().collection("questions").whereField("memberID", arrayContains: "as").addSnapshotListener { snapshot, error in
             if let error = error {
                 print("Error fetching questions: \(error)")
                 self.isLoading = false
@@ -41,11 +42,31 @@ class ModelData: ObservableObject {
                 return
             }
             
-            // スレッドをデコードして@Published questionsに更新
-            self.questions = documents.compactMap { document in
-                try? document.data(as: Question.self)
+            Task {
+                do {
+                    // Firestoreからリアルタイムで質問をデコードする
+                    var questions = documents.compactMap { document in
+                        try? document.data(as: Question.self)
+                    }
+                    
+                    // リアルタイムで質問ごとのユーザー情報を取得して代入
+                    for index in questions.indices {
+                        let questionMembers = try await FirebaseAPI().fetchUsersByIds(ids: questions[index].memberID)
+                        questions[index].member = questionMembers
+                    }
+                    
+                    // @Published propertyを更新
+                    DispatchQueue.main.async {
+                        self.questions = questions
+                        self.isLoading = false
+                    }
+                } catch {
+                    print("Error fetching users for questions: \(error)")
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                    }
+                }
             }
-            self.isLoading = false
         }
     }
     
@@ -54,12 +75,36 @@ class ModelData: ObservableObject {
         do {
             isLoading = true
             let fetchedQuestions = try await FirebaseAPI().fetchQuestions()
+            
+            // Fetch users for questions in parallel
+            var updatedQuestions = fetchedQuestions
+            for index in updatedQuestions.indices {
+                let questionMembers = try await FirebaseAPI().fetchUsersByIds(ids: updatedQuestions[index].memberID)
+                updatedQuestions[index].member = questionMembers
+            }
+            
             DispatchQueue.main.async {
-                self.questions = fetchedQuestions
+                self.questions = updatedQuestions
                 self.isLoading = false
             }
         } catch {
             print("Error fetching questions: \(error)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func loadUsers() async {
+        do {
+            isLoading = true
+            let fetchedUsers = try await FirebaseAPI().fetchUsersByIds(ids: ["as"])
+            DispatchQueue.main.async {
+                self.users = fetchedUsers
+                self.isLoading = false
+            }
+        } catch {
+            print("Error fetching users: \(error)")
             DispatchQueue.main.async {
                 self.isLoading = false
             }
