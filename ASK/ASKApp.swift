@@ -6,9 +6,20 @@
 //
 
 import SwiftUI
+import FirebaseCore
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Initialize Firebase
+        FirebaseApp.configure()
+    }
+}
 
 @main
 struct ASKApp: App {
+    // Create the application delegate
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
         WindowGroup {
             MessageView()
