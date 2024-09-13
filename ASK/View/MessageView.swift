@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MessageView.swift
 //  ASK
 //
 //  Created by 保坂篤志 on 2024/09/14.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct MessageView: View {
     var body: some View {
         NavigationSplitView {
             List {
@@ -32,5 +32,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    MessageView()
 }
