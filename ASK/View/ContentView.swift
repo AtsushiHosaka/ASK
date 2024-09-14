@@ -10,23 +10,34 @@ import FirebaseAuth
 
 struct ContentView: View {
     @State private var isLoggedIn = false
-    
+
     var body: some View {
         if isLoggedIn {
             QuestionList()
                 .frame(minWidth: 800, minHeight: 600)
         } else {
             LoginView(isLoggedIn: $isLoggedIn)
+                .onAppear {
+                    checkIfLoggedIn()
+                }
         }
     }
     
-    init() {
-        checkIfLoggedIn()
+    private func checkIfLoggedIn() {
+        if let email = UserPersistence.loadUserEmail(), 
+           let password = UserPersistence.loadUserPassword() {
+            
+            loginWithEmail(email: email, password: password)
+        }
     }
     
-    private func checkIfLoggedIn() {
-        if let currentUser = Auth.auth().currentUser {
-            isLoggedIn = true
+    func loginWithEmail(email: String, password: String) {
+        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                self.isLoggedIn = true
+            }
         }
     }
 }
