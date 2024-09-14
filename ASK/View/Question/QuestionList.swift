@@ -55,7 +55,7 @@ struct QuestionList: View {
         guard let userId = UserPersistence.loadUserUID() else { return }
         
         Task {
-            let newQuestion = Question(title: "わからない", createDate: Date(), memberID: [userId])
+            let newQuestion = Question(title: "わからない", createDate: Date(), memberID: [userId], messages: [])
             await modelData.addQuestion(newQuestion)
         }
     }

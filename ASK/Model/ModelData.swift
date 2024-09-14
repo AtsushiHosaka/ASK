@@ -17,9 +17,11 @@ class ModelData: ObservableObject {
     
     private let firebaseAPI = FirebaseAPI()
     private var listener: ListenerRegistration?
+    private var messageListeners: [String: ListenerRegistration] = [:] // 各質問のメッセージリスナー
     
     deinit {
         listener?.remove()
+        messageListeners.values.forEach { $0.remove() } // メッセージリスナーの削除
     }
     
     func addQuestionsListener() {
@@ -55,6 +57,9 @@ class ModelData: ObservableObject {
                         for index in questions.indices {
                             let questionMembers = try await self.firebaseAPI.fetchUsersByIds(ids: questions[index].memberID)
                             questions[index].member = questionMembers
+                            
+                            // 各質問のメッセージを監視
+                            self.addMessagesListener(for: questions[index].id ?? "")
                         }
                         
                         DispatchQueue.main.async {
@@ -69,6 +74,43 @@ class ModelData: ObservableObject {
                     }
                 }
             }
+    }
+    
+    func addMessagesListener(for questionID: String) {
+        let db = Firestore.firestore()
+        let messagesRef = db.collection("questions").document(questionID).collection("messages")
+        
+        // 既存のリスナーがあれば削除
+        messageListeners[questionID]?.remove()
+        
+        let listener = messagesRef.addSnapshotListener { snapshot, error in
+            if let error = error {
+                print("Error fetching messages: \(error)")
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                print("No messages found")
+                return
+            }
+            
+            // メッセージのリストを更新
+            var updatedMessages: [Message] = []
+            for document in documents {
+                if let message = try? document.data(as: Message.self) {
+                    updatedMessages.append(message)
+                }
+            }
+            
+            DispatchQueue.main.async {
+                // questions 配列を更新
+                if let index = self.questions.firstIndex(where: { $0.id == questionID }) {
+                    self.questions[index].messages = updatedMessages
+                }
+            }
+        }
+        
+        messageListeners[questionID] = listener
     }
     
     func loadQuestions() async {

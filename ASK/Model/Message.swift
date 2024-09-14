@@ -7,17 +7,22 @@
 
 import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 struct Message: Hashable, Identifiable, Codable {
-    var id: UUID
+    @DocumentID var id: String?
     var date: Date
     var content: String
+    var sentBy: String
+    var code: String?
+    var replyTo: String?
     
-    private var imageName: String
-    var image: Image {
-        Image(imageName)
+    init(id: String? = nil, date: Date, content: String, sentBy: String, code: String? = nil, replyTo: String? = nil) {
+        self.id = id
+        self.date = date
+        self.content = content
+        self.sentBy = sentBy
+        self.code = code
+        self.replyTo = replyTo
     }
-    
-    var code: String
-    var replyTo: UUID
 }

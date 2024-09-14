@@ -28,5 +28,5 @@ struct QuestionRow: View {
 }
 
 #Preview {
-    QuestionRow(question: Question(title: "テスト", createDate: Date(), memberID: ["as", "atsushi"]))
+    QuestionRow(question: Question(title: "テスト", createDate: Date(), memberID: ["as", "atsushi"], messages: []))
 }

@@ -15,4 +15,6 @@ struct Question: Hashable, Codable, Identifiable {
     
     var memberID: [String]
     var member: [User]?
+    
+    var messages: [Message]
 }

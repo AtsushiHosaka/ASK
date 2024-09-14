@@ -64,4 +64,16 @@ class FirebaseAPI {
             throw NSError(domain: "FirebaseAPI", code: 500, userInfo: [NSLocalizedDescriptionKey: "Failed to add question: \(error.localizedDescription)"])
         }
     }
+    
+    static func addMessageToFirestore(question: Question, message: Message) {
+        guard let questionID = question.id else { return }
+        let db = Firestore.firestore()
+        let questionRef = db.collection("questions").document(questionID)
+        
+        do {
+            try questionRef.collection("messages").addDocument(from: message)
+        } catch let error {
+            print("Error adding message to Firestore: \(error)")
+        }
+    }
 }

@@ -8,27 +8,35 @@
 import SwiftUI
 
 struct MessageView: View {
+    @EnvironmentObject var modelData: ModelData
+    
     var question: Question
+    @State private var newMessageContent: String = ""
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Question: \(question.title)")
-                .font(.headline)
-            Text("Created on: \(question.createDate, formatter: dateFormatter)")
-                .font(.subheadline)
-            
-            if let member = question.member {
-                ForEach(member) { user in
-                    if let userId = user.id {  // Userのidをアンラップ
-                        HStack {
-                            Text("User: \(user.name)")
-                            Text("ID: \(userId)")
-                        }
-                    }
-                }
+            List(question.messages) { message in
+                Text(message.content)
             }
-            ForEach(question.memberID, id: \.self) { user in
-                Text(user)
+            
+            HStack {
+                TextField("Enter message", text: $newMessageContent)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                
+                Button(action: {
+                    let newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
+                    FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
+                    newMessageContent = "" // Clear the text field after sending
+                }) {
+                    Text("Send")
+                }
+                .padding(.trailing)
+            }
+        }
+        .onAppear {
+            if let id = question.id {
+                modelData.addMessagesListener(for: id)
             }
         }
     }
@@ -42,6 +50,6 @@ struct MessageView: View {
 }
 
 #Preview {
-    MessageView(question: Question(title: "テスト", createDate: Date(), memberID: ["as", "atsushi"]))
+    MessageView(question: Question(title: "テスト", createDate: Date(), memberID: ["as", "atsushi"], messages: []))
         .environmentObject(ModelData())
 }
