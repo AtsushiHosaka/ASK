@@ -7,9 +7,20 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseCore
+
+class AppDelete: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
+}
 
 @main
 struct ASK_iOSApp: App {
+    @UIApplicationDelegateAdaptor(AppDelete.self) var delegate
+    @StateObject private var modelData = ModelData()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,8 +36,9 @@ struct ASK_iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MessageView()
+                .environmentObject(modelData)
         }
-        .modelContainer(sharedModelContainer)
+//        .modelContainer(sharedModelContainer)
     }
 }

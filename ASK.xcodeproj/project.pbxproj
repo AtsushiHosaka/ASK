@@ -69,6 +69,12 @@
 		6DBDD5372C95224800BB959B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD5362C95224800BB959B /* FirebaseStorage */; };
 		6DBDD5392C95224800BB959B /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD5382C95224800BB959B /* FirebaseStorageCombine-Community */; };
 		6DBDD53B2C95224800BB959B /* FirebaseVertexAI-Preview in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD53A2C95224800BB959B /* FirebaseVertexAI-Preview */; };
+		6DBDD53C2C95237800BB959B /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD3532C94A2B800BB959B /* Message.swift */; };
+		6DBDD53D2C95237800BB959B /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD33F2C949C1D00BB959B /* MessageView.swift */; };
+		6DBDD53E2C95237800BB959B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD34E2C949FA600BB959B /* User.swift */; };
+		6DBDD53F2C95237800BB959B /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD4052C94B2E500BB959B /* ModelData.swift */; };
+		6DBDD5402C95237800BB959B /* FirebaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD4072C94B33500BB959B /* FirebaseAPI.swift */; };
+		6DBDD5412C95237800BB959B /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD3512C94A0CA00BB959B /* Question.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -407,6 +413,12 @@
 			files = (
 				6DBDD3FA2C94B20E00BB959B /* ContentView.swift in Sources */,
 				6DBDD3FC2C94B20E00BB959B /* Item.swift in Sources */,
+				6DBDD53C2C95237800BB959B /* Message.swift in Sources */,
+				6DBDD53D2C95237800BB959B /* MessageView.swift in Sources */,
+				6DBDD53E2C95237800BB959B /* User.swift in Sources */,
+				6DBDD53F2C95237800BB959B /* ModelData.swift in Sources */,
+				6DBDD5402C95237800BB959B /* FirebaseAPI.swift in Sources */,
+				6DBDD5412C95237800BB959B /* Question.swift in Sources */,
 				6DBDD3F82C94B20E00BB959B /* ASK_iOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
