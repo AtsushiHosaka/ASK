@@ -21,7 +21,7 @@ struct QuestionList: View {
                             NavigationLink {
                                 MessageView(question: question)
                             } label: {
-                                
+                                QuestionRow(question: question)
                             }
                         }
                     }
