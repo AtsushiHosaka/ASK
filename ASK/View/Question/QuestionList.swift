@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct QuestionList: View {
-    @EnvironmentObject var modelData: ModelData  // ModelDataを@EnvironmentObjectで参照
+    @EnvironmentObject var modelData: ModelData
+    @State private var initialLoaded = false  // 新しい変数を追加して初回ロードを確認
     
     var body: some View {
         NavigationSplitView {
-            if modelData.isLoading {
+            if modelData.isLoading && !initialLoaded {  // 初回ロード時にのみ表示
                 ProgressView("Loading...")  // ローディング中に表示
             } else {
                 List {
                     ForEach(modelData.questions) { question in
-                        if let questionId = question.id {  // Questionのidをアンラップ
+                        if let _ = question.id {
                             NavigationLink {
                                 MessageView(question: question)
                             } label: {
@@ -34,10 +35,13 @@ struct QuestionList: View {
                     }
                 }
                 .onAppear {
-                    Task {
-                        // 初回表示時にスレッドのリスナーがセットされていることを確認
-                        if modelData.questions.isEmpty {
-                            await modelData.loadQuestions()
+                    if !initialLoaded {
+                        Task {
+                            if modelData.questions.isEmpty {
+                                modelData.addQuestionsListener()
+                                await modelData.loadQuestions()
+                                initialLoaded = true  // 初回ロード完了を設定
+                            }
                         }
                     }
                 }
@@ -48,8 +52,10 @@ struct QuestionList: View {
     }
     
     private func addQuestion() {
+        guard let userId = UserPersistence.loadUserUID() else { return }
+        
         Task {
-            let newQuestion = Question(title: "わからない", createDate: Date(), memberID: ["as"])
+            let newQuestion = Question(title: "わからない", createDate: Date(), memberID: [userId])
             await modelData.addQuestion(newQuestion)
         }
     }

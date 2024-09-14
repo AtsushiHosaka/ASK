@@ -14,11 +14,11 @@ class FirebaseAPI {
     // 現在ログインしているユーザーのIDがmemberIDに含まれているQuestionsを取得し、各Questionのmemberに該当するUserを代入
     func fetchQuestions() async throws -> [Question] {
         // ログインユーザーを取得します。
-        //        guard let currentUser = Auth.auth().currentUser else {
-        //            throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
-        //        }
+        guard let currentUser = Auth.auth().currentUser else {
+            throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
+        }
         
-        let userId = "as" /*currentUser.uid*/
+        let userId = currentUser.uid
         
         let snapshot = try await db.collection("questions").whereField("memberID", arrayContains: userId).getDocuments()
         
