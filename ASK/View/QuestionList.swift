@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct QuestionsView: View {
+struct QuestionList: View {
     @EnvironmentObject var modelData: ModelData  // ModelDataを@EnvironmentObjectで参照
     
     var body: some View {
@@ -56,6 +56,6 @@ struct QuestionsView: View {
 }
 
 #Preview {
-    QuestionsView()
+    QuestionList()
         .environmentObject(ModelData())
 }
