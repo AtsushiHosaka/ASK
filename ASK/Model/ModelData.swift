@@ -13,6 +13,8 @@ class ModelData: ObservableObject {
     @Published var users: [User] = []
     @Published var questions: [Question] = []
     @Published var isLoading = false       // ローディング状態
+    
+    private let firebaseAPI = FirebaseAPI()
     private var listener: ListenerRegistration?  // Firestoreリスナー
     
     init() {
@@ -25,20 +27,25 @@ class ModelData: ObservableObject {
         listener?.remove()
     }
     
-    // Firestoreからスレッドをリアルタイムで監視する関数
     private func addQuestionsListener() {
-        isLoading = true
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
         
         listener = Firestore.firestore().collection("questions").whereField("memberID", arrayContains: "as").addSnapshotListener { snapshot, error in
             if let error = error {
                 print("Error fetching questions: \(error)")
-                self.isLoading = false
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
                 return
             }
             
             guard let documents = snapshot?.documents else {
                 print("No questions found")
-                self.isLoading = false
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
                 return
             }
             
@@ -51,13 +58,13 @@ class ModelData: ObservableObject {
                     
                     // リアルタイムで質問ごとのユーザー情報を取得して代入
                     for index in questions.indices {
-                        let questionMembers = try await FirebaseAPI().fetchUsersByIds(ids: questions[index].memberID)
+                        let questionMembers = try await self.firebaseAPI.fetchUsersByIds(ids: questions[index].memberID)
                         questions[index].member = questionMembers
                     }
                     
-                    // @Published propertyを更新
+                    // @Publishedプロパティをメインスレッドで更新
                     DispatchQueue.main.async {
-                        self.questions = questions
+                        self.questions = questions.sorted(by: { $0.createDate >= $1.createDate })
                         self.isLoading = false
                     }
                 } catch {
@@ -70,21 +77,16 @@ class ModelData: ObservableObject {
         }
     }
     
-    // 手動でFirestoreからスレッドを取得する関数（必要に応じて使用）
     func loadQuestions() async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
         do {
-            isLoading = true
-            let fetchedQuestions = try await FirebaseAPI().fetchQuestions()
-            
-            // Fetch users for questions in parallel
-            var updatedQuestions = fetchedQuestions
-            for index in updatedQuestions.indices {
-                let questionMembers = try await FirebaseAPI().fetchUsersByIds(ids: updatedQuestions[index].memberID)
-                updatedQuestions[index].member = questionMembers
-            }
+            let fetchedQuestions = try await firebaseAPI.fetchQuestions()
             
             DispatchQueue.main.async {
-                self.questions = updatedQuestions
+                self.questions = fetchedQuestions.sorted(by: { $0.createDate >= $1.createDate })
                 self.isLoading = false
             }
         } catch {
@@ -98,13 +100,33 @@ class ModelData: ObservableObject {
     func loadUsers() async {
         do {
             isLoading = true
-            let fetchedUsers = try await FirebaseAPI().fetchUsersByIds(ids: ["as"])
+            let fetchedUsers = try await self.firebaseAPI.fetchUsersByIds(ids: ["as"])
             DispatchQueue.main.async {
                 self.users = fetchedUsers
                 self.isLoading = false
             }
         } catch {
             print("Error fetching users: \(error)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func addQuestion(_ question: Question) async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        do {
+            // FirebaseAPIのaddQuestionメソッドを呼び出してFirestoreに追加
+            try await firebaseAPI.addQuestion(question: question)
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        } catch {
+            print("Error adding question: \(error)")
             DispatchQueue.main.async {
                 self.isLoading = false
             }
