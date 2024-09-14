@@ -19,9 +19,6 @@ class FirebaseAPI {
 //        }
 
         let userId = "as" /*currentUser.uid*/
-
-        // FirestoreからQuestionsを取得します。
-//        let snapshot = try await db.collection("questions").getDocuments()
         
         let snapshot = try await db.collection("questions").whereField("memberID", arrayContains: userId).getDocuments()
 
