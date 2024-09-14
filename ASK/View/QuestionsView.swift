@@ -21,12 +21,7 @@ struct QuestionsView: View {
                             NavigationLink {
                                 MessageView(question: question)
                             } label: {
-                                VStack(alignment: .leading) {
-                                    Text(question.title)
-                                        .font(.headline)
-                                    Text("Created on: \(question.createDate, formatter: dateFormatter)")
-                                        .font(.subheadline)
-                                }
+                                
                             }
                         }
                     }
@@ -57,13 +52,6 @@ struct QuestionsView: View {
             let newQuestion = Question(title: "わからない", createDate: Date(), memberID: ["as"])
             await modelData.addQuestion(newQuestion)
         }
-    }
-    
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter
     }
 }
 
