@@ -6,11 +6,28 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ContentView: View {
+    @State private var isLoggedIn = false
+    
     var body: some View {
-        QuestionList()
-            .frame(minWidth: 800, minHeight: 600)
+        if isLoggedIn {
+            QuestionList()
+                .frame(minWidth: 800, minHeight: 600)
+        } else {
+            LoginView(isLoggedIn: $isLoggedIn)
+        }
+    }
+    
+    init() {
+        checkIfLoggedIn()
+    }
+    
+    private func checkIfLoggedIn() {
+        if let currentUser = Auth.auth().currentUser {
+            isLoggedIn = true
+        }
     }
 }
 

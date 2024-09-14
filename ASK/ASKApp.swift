@@ -13,7 +13,7 @@ struct ASKApp: App {
     init() {
         FirebaseApp.configure()
     }
-    
+
     @StateObject private var modelData = ModelData()
 
     var body: some Scene {
