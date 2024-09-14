@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>886386745466-aapacl2lfjg88iaf9g7qec7tr0r4sl7q.apps.googleusercontent.com</string>
+	<string>886386745466-rhkqi3l0c17lmrcshviugk31hqvonn11.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.886386745466-aapacl2lfjg88iaf9g7qec7tr0r4sl7q</string>
+	<string>com.googleusercontent.apps.886386745466-rhkqi3l0c17lmrcshviugk31hqvonn11</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBm_VgwJlQ1zl0nAksK6IGY-HaPD-JxkoA</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>app.hosaka.AS.ASK</string>
+	<string>app.hosaka.AS.ASK-iOS</string>
 	<key>PROJECT_ID</key>
 	<string>ask-project-b50e1</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:886386745466:ios:007a24886dee5e94a11bc3</string>
+	<string>1:886386745466:ios:19935dc4a0666faea11bc3</string>
 </dict>
 </plist>
