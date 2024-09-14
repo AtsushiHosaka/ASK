@@ -8,77 +8,31 @@
 import SwiftUI
 
 struct MessageView: View {
-    @EnvironmentObject var modelData: ModelData  // ModelDataを@EnvironmentObjectで参照
+    var question: Question
     
     var body: some View {
-        NavigationSplitView {
-            if modelData.isLoading {
-                ProgressView("Loading...")  // ローディング中に表示
-            } else {
-                List {
-                    ForEach(modelData.questions) { question in
-                        if let questionId = question.id {  // Questionのidをアンラップ
-                            NavigationLink {
-                                VStack(alignment: .leading) {
-                                    Text("Question: \(question.title)")
-                                        .font(.headline)
-                                    Text("Created on: \(question.createDate, formatter: dateFormatter)")
-                                        .font(.subheadline)
-                                    
-                                    if let member = question.member {
-                                        ForEach(member) { user in
-                                            if let userId = user.id {  // Userのidをアンラップ
-                                                HStack {
-                                                    Text("User: \(user.name)")
-                                                    Text("ID: \(userId)")
-                                                }
-                                            }
-                                        }
-                                    }
-                                    ForEach(question.memberID, id: \.self) { user in
-                                        Text(user)
-                                    }
-                                }
-                            } label: {
-                                VStack(alignment: .leading) {
-                                    Text(question.title)
-                                        .font(.headline)
-                                    Text("Created on: \(question.createDate, formatter: dateFormatter)")
-                                        .font(.subheadline)
-                                }
-                            }
-                        }
-                    }
-                }
-                .toolbar {
-                    ToolbarItem {
-                        Button(action: addQuestion) {
-                            Label("Add Item", systemImage: "plus")
-                        }
-                    }
-                }
-                .onAppear {
-                    Task {
-                        // 初回表示時にスレッドのリスナーがセットされていることを確認
-                        if modelData.questions.isEmpty {
-                            await modelData.loadQuestions()
+        VStack(alignment: .leading) {
+            Text("Question: \(question.title)")
+                .font(.headline)
+            Text("Created on: \(question.createDate, formatter: dateFormatter)")
+                .font(.subheadline)
+            
+            if let member = question.member {
+                ForEach(member) { user in
+                    if let userId = user.id {  // Userのidをアンラップ
+                        HStack {
+                            Text("User: \(user.name)")
+                            Text("ID: \(userId)")
                         }
                     }
                 }
             }
-        } detail: {
-            Text("Select an item")
+            ForEach(question.memberID, id: \.self) { user in
+                Text(user)
+            }
         }
     }
     
-    private func addQuestion() {
-        Task {
-            let newQuestion = Question(title: "わからない", createDate: Date(), memberID: ["as"])
-            await modelData.addQuestion(newQuestion)
-        }
-    }
-    
-    // 日付のフォーマッタ
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -88,6 +42,6 @@ struct MessageView: View {
 }
 
 #Preview {
-    MessageView()
-        .environmentObject(ModelData())  // PreviewにModelDataを注入
+    MessageView(question: Question(title: "テスト", createDate: Date(), memberID: ["as", "atsushi"]))
+        .environmentObject(ModelData())
 }

@@ -8,55 +8,66 @@
 import SwiftUI
 
 struct QuestionsView: View {
-    @State private var messageText = ""
+    @EnvironmentObject var modelData: ModelData  // ModelDataを@EnvironmentObjectで参照
     
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(1..<20) { index in
-                        ChatBubble(message: "Sample message \(index)")
+        NavigationSplitView {
+            if modelData.isLoading {
+                ProgressView("Loading...")  // ローディング中に表示
+            } else {
+                List {
+                    ForEach(modelData.questions) { question in
+                        if let questionId = question.id {  // Questionのidをアンラップ
+                            NavigationLink {
+                                MessageView(question: question)
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    Text(question.title)
+                                        .font(.headline)
+                                    Text("Created on: \(question.createDate, formatter: dateFormatter)")
+                                        .font(.subheadline)
+                                }
+                            }
+                        }
                     }
                 }
-                .padding()
-            }
-            .background(Color.white)
-            
-            Divider()
-            
-            HStack {
-                TextField("Type a message...", text: $messageText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                Button(action: {
-                    // Send action
-                }) {
-                    Image(systemName: "paperplane.fill")
-                        .resizable()
-                        .frame(width: 20, height: 20)
+                .toolbar {
+                    ToolbarItem {
+                        Button(action: addQuestion) {
+                            Label("Add Item", systemImage: "plus")
+                        }
+                    }
                 }
-                .buttonStyle(BorderlessButtonStyle())
+                .onAppear {
+                    Task {
+                        // 初回表示時にスレッドのリスナーがセットされていることを確認
+                        if modelData.questions.isEmpty {
+                            await modelData.loadQuestions()
+                        }
+                    }
+                }
             }
-            .padding()
+        } detail: {
+            Text("Select an item")
         }
     }
-}
-
-struct ChatBubble: View {
-    var message: String
     
-    var body: some View {
-        HStack {
-            Text(message)
-                .padding()
-                .background(Color.blue.opacity(0.1))
-                .cornerRadius(10)
-            
-            Spacer()
+    private func addQuestion() {
+        Task {
+            let newQuestion = Question(title: "わからない", createDate: Date(), memberID: ["as"])
+            await modelData.addQuestion(newQuestion)
         }
+    }
+    
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
     }
 }
 
 #Preview {
     QuestionsView()
+        .environmentObject(ModelData())
 }

@@ -9,13 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack {
-            HStack {
-                SidebarView()
-                QuestionsView()
-            }
-        }
-        .frame(minWidth: 800, minHeight: 600)
+        QuestionsView()
+            .frame(minWidth: 800, minHeight: 600)
     }
 }
 

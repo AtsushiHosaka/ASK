@@ -20,8 +20,6 @@ struct ASKApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(modelData)
-//            MessageView()
-//                .environmentObject(modelData)
         }
     }
 }
