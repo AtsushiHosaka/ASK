@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct LoginView: View {
+    @Binding var isLoggedIn: Bool
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage: String?
@@ -35,15 +36,9 @@ struct LoginView: View {
             }
             
             Button("Sign Up with Email") {
-                Auth.auth().createUser(withEmail: email, password: password) { result, error in
-                    if let error = error {
-                        self.errorMessage = error.localizedDescription
-                    } else {
-                        self.errorMessage = nil
-                        // サインアップ成功
-                    }
-                }
+                signUpWithEmail()
             }
+            .padding()
         }
         .padding()
     }
@@ -54,12 +49,25 @@ struct LoginView: View {
                 self.errorMessage = error.localizedDescription
             } else {
                 self.errorMessage = nil
-                // ログイン成功
+                self.isLoggedIn = true
+                // ログイン成功時の処理
+            }
+        }
+    }
+    
+    func signUpWithEmail() {
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                self.errorMessage = error.localizedDescription
+            } else {
+                self.errorMessage = nil
+                self.isLoggedIn = true
+                // サインアップ成功時の処理
             }
         }
     }
 }
 
 #Preview {
-    LoginView()
+    LoginView(isLoggedIn: .constant(false))
 }

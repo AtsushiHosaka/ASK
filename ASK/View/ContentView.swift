@@ -6,11 +6,9 @@
 //
 
 import SwiftUI
-import SwiftData
 import FirebaseAuth
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
     @State private var isLoggedIn = false
     
     var body: some View {
@@ -18,7 +16,7 @@ struct ContentView: View {
             QuestionList()
                 .frame(minWidth: 800, minHeight: 600)
         } else {
-            LoginView()
+            LoginView(isLoggedIn: $isLoggedIn)
         }
     }
     
@@ -28,9 +26,6 @@ struct ContentView: View {
     
     private func checkIfLoggedIn() {
         if let currentUser = Auth.auth().currentUser {
-            // すでにログインしているユーザーがいる場合
-            let user = User(email: currentUser.email ?? "", isLoggedIn: true)
-            modelContext.insert(user)
             isLoggedIn = true
         }
     }
