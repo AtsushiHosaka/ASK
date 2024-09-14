@@ -18,8 +18,10 @@ struct ASKApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MessageView()
+            ContentView()
                 .environmentObject(modelData)
+//            MessageView()
+//                .environmentObject(modelData)
         }
     }
 }
