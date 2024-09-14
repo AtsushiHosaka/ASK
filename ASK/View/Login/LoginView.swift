@@ -52,6 +52,7 @@ struct LoginView: View {
             if let error = error {
                 self.errorMessage = error.localizedDescription
             } else {
+                UserPersistence.saveUser(uid: result!.user.uid, email: email, password: password)
                 self.errorMessage = nil
                 self.isLoggedIn = true
             }

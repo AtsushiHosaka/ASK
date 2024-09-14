@@ -30,7 +30,11 @@ struct SignupView: View {
                 .padding()
             
             Button("Sign Up with Email") {
-                signUpWithEmail()
+                if password == passwordConfirmation {
+                    signUpWithEmail()
+                } else {
+                    errorMessage = "パスワードが異なります"
+                }
             }
             .padding()
             
@@ -48,6 +52,7 @@ struct SignupView: View {
             if let error = error {
                 self.errorMessage = error.localizedDescription
             } else {
+                UserPersistence.saveUser(uid: result!.user.uid, email: email, password: password)
                 self.errorMessage = nil
                 self.isLoggedIn = true
             }
