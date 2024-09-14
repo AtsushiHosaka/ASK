@@ -50,6 +50,13 @@ struct MessageView: View {
                         }
                     }
                 }
+                .toolbar {
+                    ToolbarItem {
+                        Button(action: addQuestion) {
+                            Label("Add Item", systemImage: "plus")
+                        }
+                    }
+                }
                 .onAppear {
                     Task {
                         // 初回表示時にスレッドのリスナーがセットされていることを確認
@@ -61,6 +68,13 @@ struct MessageView: View {
             }
         } detail: {
             Text("Select an item")
+        }
+    }
+    
+    private func addQuestion() {
+        Task {
+            let newQuestion = Question(title: "わからない", createDate: Date(), memberID: ["as"])
+            await modelData.addQuestion(newQuestion)
         }
     }
     
