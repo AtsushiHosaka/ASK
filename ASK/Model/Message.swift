@@ -17,16 +17,20 @@ struct Message: Hashable, Identifiable, Codable {
     
     var fileName: String?
     var code: String?
+    var codeDiffBefore: String?
+    var codeDiffAfter: String?
     
     var replyTo: String?
     
-    init(id: String? = nil, date: Date, content: String, sentBy: String, fileName: String? = nil, code: String? = nil, replyTo: String? = nil) {
+    init(id: String? = nil, date: Date, content: String, sentBy: String, fileName: String? = nil, code: String? = nil, codeDiffBefore: String? = nil, codeDiffAfter: String? = nil, replyTo: String? = nil) {
         self.id = id
         self.date = date
         self.content = content
         self.sentBy = sentBy
         self.fileName = fileName
         self.code = code
+        self.codeDiffBefore = codeDiffBefore
+        self.codeDiffAfter = codeDiffAfter
         self.replyTo = replyTo
     }
 }
