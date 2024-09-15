@@ -219,30 +219,6 @@ struct MessageView: View {
         }
         return message
     }
-    
-    private func compareStrings(oldText: String, newText: String) -> (deletedRows: [Int], addedRows: [Int]) {
-        let oldLines = oldText.components(separatedBy: .newlines)
-        let newLines = newText.components(separatedBy: .newlines)
-        
-        var deletedRows = [Int]()
-        var addedRows = [Int]()
-        
-        // 削除された行を検出
-        for (index, line) in oldLines.enumerated() {
-            if !newLines.contains(line) {
-                deletedRows.append(index + 1) // 行番号は1から始まるので+1
-            }
-        }
-        
-        // 追加された行を検出
-        for (index, line) in newLines.enumerated() {
-            if !oldLines.contains(line) {
-                addedRows.append(index + 1) // 行番号は1から始まるので+1
-            }
-        }
-        
-        return (deletedRows, addedRows)
-    }
 }
 
 #Preview {
