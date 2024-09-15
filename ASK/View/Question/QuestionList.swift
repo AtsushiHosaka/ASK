@@ -22,7 +22,7 @@ struct QuestionList: View {
                     ForEach(modelData.questions) { question in
                         if let _ = question.id {
                             NavigationLink {
-                                MessageView(question: question)
+                                ChatView(question: question)
                             } label: {
                                 QuestionRow(question: question)
                             }

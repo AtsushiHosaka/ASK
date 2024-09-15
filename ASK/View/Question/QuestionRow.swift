@@ -10,11 +10,21 @@ import SwiftUI
 struct QuestionRow: View {
     var question: Question
     
+    var title: String {
+        if let messages = question.messages {
+            if let lastMessage = messages.last {
+                return String(lastMessage.content.prefix(15))
+            }
+        }
+        
+        return ""
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
-            Text(question.title)
+            Text(title)
                 .font(.headline)
-            Text("Created on: \(question.createDate, formatter: dateFormatter)")
+            Text("\(question.createDate, formatter: dateFormatter)に作成")
                 .font(.subheadline)
         }
     }

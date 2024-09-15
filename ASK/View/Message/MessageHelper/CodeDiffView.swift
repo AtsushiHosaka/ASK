@@ -32,29 +32,31 @@ struct CodeDiffView: View {
     @State var addedRows: [Int] = []
     
     var body: some View {
-        HStack {
-            
-            ZStack {
-                VStack(alignment: .leading) {
-                    ForEach(Array(linesBefore.enumerated()), id: \.element) { index, line in
-                        Text(AttributedString(highlighter.highlight(line)))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(1)
-                            .background(deletedRows.contains(index + 1) ? Color.red : Color.clear)
-                    }
+        HStack(spacing: 30) {
+            VStack(alignment: .leading) {
+                ForEach(Array(linesBefore.enumerated()), id: \.element) { index, line in
+                    Text(AttributedString(highlighter.highlight(line)))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 10)
+                        .background(
+                            Rectangle()
+                                .fill(deletedRows.contains(index + 1) ? Color(red: 252 / 255, green: 236 / 255, blue: 234 / 255) : Color.clear)
+                        )
                 }
             }
             
             Image(systemName: "arrow.forward")
+                .fontWeight(.heavy)
             
-            ZStack {
-                VStack(alignment: .leading) {
-                    ForEach(Array(linesAfter.enumerated()), id: \.element) { index, line in
-                        Text(AttributedString(highlighter.highlight(line)))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(1)
-                            .background(addedRows.contains(index + 1) ? Color.green : Color.clear)
-                    }
+            VStack(alignment: .leading) {
+                ForEach(Array(linesAfter.enumerated()), id: \.element) { index, line in
+                    Text(AttributedString(highlighter.highlight(line)))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 10)
+                        .background(
+                            Rectangle()
+                                .fill(addedRows.contains(index + 1) ? Color(red: 224 / 255, green: 250 / 255, blue: 227 / 255) : Color.clear)
+                        )
                 }
             }
         }
@@ -62,6 +64,11 @@ struct CodeDiffView: View {
             compareStrings()
         }
         .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 5)
+                .fill(Color.white)
+                .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
+        )
     }
     
     private func backgroundColor(rowNumber: Int) -> SwiftUI.Color {
@@ -90,22 +97,6 @@ struct CodeDiffView: View {
             }
         }
     }
-    
-    let lightTheme = Theme(
-        font: Font(size: 14),
-        plainTextColor: NSColor(.primary),
-        tokenColors: [
-            .keyword: NSColor.purple,
-            .string: NSColor(red: 196 / 255, green: 26 / 255, blue: 22 / 255, alpha: 1.0),
-            .type: NSColor(red: 11 / 255, green: 79 / 255, blue: 121 / 255, alpha: 1.0),
-            .call: NSColor(red: 50 / 255, green: 109 / 255, blue: 116 / 255, alpha: 1.0),
-            .number: NSColor.blue,
-            .comment: NSColor(red: 93 / 255, green: 108 / 255, blue: 121 / 255, alpha: 1.0),
-            .property: NSColor(red: 50 / 255, green: 109 / 255, blue: 116 / 255, alpha: 1.0),
-            .dotAccess: NSColor(red: 108 / 255, green: 54 / 255, blue: 169 / 255, alpha: 1.0),
-            .preprocessing: NSColor(red: 100 / 255, green: 56 / 255, blue: 32 / 255, alpha: 1.0)
-        ]
-    )
 }
 
 #Preview {

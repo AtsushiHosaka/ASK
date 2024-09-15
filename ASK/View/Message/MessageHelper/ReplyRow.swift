@@ -21,7 +21,7 @@ struct ReplyRow: View {
                 .foregroundStyle(.secondary)
                 
                 
-            Text(message.content)
+            Text("\(String(message.content.prefix(30)))...")
                 .frame(alignment: isMyMessage ? .trailing : .leading)
                 .foregroundStyle(.secondary)
                 .fontWeight(.bold)
