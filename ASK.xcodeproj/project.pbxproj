@@ -83,6 +83,8 @@
 		6DBDD5732C95528100BB959B /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD5722C95528100BB959B /* GoogleSignInSwift */; };
 		6DBDD5752C95583400BB959B /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD5742C95583400BB959B /* SignupView.swift */; };
 		6DBDD5782C955D6C00BB959B /* UserPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD5772C955D6C00BB959B /* UserPersistence.swift */; };
+		6DBDD5992C96D64400BB959B /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD5982C96D64400BB959B /* Splash */; };
+		6DBDD59B2C96D64400BB959B /* SplashMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 6DBDD59A2C96D64400BB959B /* SplashMarkdown */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,6 +124,7 @@
 				6DBDD37C2C94A46900BB959B /* FirebaseMessaging in Frameworks */,
 				6DBDD37A2C94A46900BB959B /* FirebaseMLModelDownloader in Frameworks */,
 				6DBDD3602C94A46900BB959B /* FirebaseAppCheck in Frameworks */,
+				6DBDD59B2C96D64400BB959B /* SplashMarkdown in Frameworks */,
 				6DBDD3642C94A46900BB959B /* FirebaseAuth in Frameworks */,
 				6DBDD35A2C94A46900BB959B /* FirebaseAnalytics in Frameworks */,
 				6DBDD3622C94A46900BB959B /* FirebaseAppDistribution-Beta in Frameworks */,
@@ -131,6 +134,7 @@
 				6DBDD3742C94A46900BB959B /* FirebaseFunctionsCombine-Community in Frameworks */,
 				6DBDD3662C94A46900BB959B /* FirebaseAuthCombine-Community in Frameworks */,
 				6DBDD3822C94A46900BB959B /* FirebaseStorage in Frameworks */,
+				6DBDD5992C96D64400BB959B /* Splash in Frameworks */,
 				6DBDD35C2C94A46900BB959B /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				6DBDD3722C94A46900BB959B /* FirebaseFunctions in Frameworks */,
 				6DBDD3782C94A46900BB959B /* FirebaseInstallations in Frameworks */,
@@ -332,6 +336,8 @@
 				6DBDD3852C94A46900BB959B /* FirebaseVertexAI-Preview */,
 				6DBDD5702C95528100BB959B /* GoogleSignIn */,
 				6DBDD5722C95528100BB959B /* GoogleSignInSwift */,
+				6DBDD5982C96D64400BB959B /* Splash */,
+				6DBDD59A2C96D64400BB959B /* SplashMarkdown */,
 			);
 			productName = ASK;
 			productReference = 6DBDD33A2C949C1D00BB959B /* ASK.app */;
@@ -409,6 +415,7 @@
 			packageReferences = (
 				6DBDD3582C94A46900BB959B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				6DBDD56F2C95528100BB959B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				6DBDD5972C96D64400BB959B /* XCRemoteSwiftPackageReference "Splash" */,
 			);
 			productRefGroup = 6DBDD33B2C949C1D00BB959B /* Products */;
 			projectDirPath = "";
@@ -773,6 +780,14 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		6DBDD5972C96D64400BB959B /* XCRemoteSwiftPackageReference "Splash" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JohnSundell/Splash";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.16.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1015,6 +1030,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6DBDD56F2C95528100BB959B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		6DBDD5982C96D64400BB959B /* Splash */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6DBDD5972C96D64400BB959B /* XCRemoteSwiftPackageReference "Splash" */;
+			productName = Splash;
+		};
+		6DBDD59A2C96D64400BB959B /* SplashMarkdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6DBDD5972C96D64400BB959B /* XCRemoteSwiftPackageReference "Splash" */;
+			productName = SplashMarkdown;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
