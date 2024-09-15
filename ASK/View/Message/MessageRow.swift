@@ -10,6 +10,7 @@ import Splash
 
 struct MessageRow: View {
     var message: Message
+    var repliedMessage: Message?
     
     var isMyMessage: Bool {
         return message.sentBy == UserPersistence.loadUserUID()

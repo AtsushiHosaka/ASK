@@ -16,11 +16,31 @@ struct MessageView: View {
     @State private var textHeight: CGFloat = 30
     @State private var fileName: String = ""
     @State private var code: String = ""
+    @State private var scrollToMessageID: String? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
-            List(question.messages) { message in
-                MessageRow(message: message)
+            ScrollViewReader { proxy in
+                List(question.messages) { message in
+                    if let replyTo = message.replyTo,
+                       let repliedMessage = getRepliedMessage(id: replyTo) {
+                        ReplyRow(message: message)
+                            .onTapGesture {
+                                scrollToMessageID = repliedMessage.id
+                                proxy.scrollTo(repliedMessage.id, anchor: .top)
+                                
+                            }
+                    }
+                    MessageRow(message: message)
+                        .id(message.id)
+                }
+                .onAppear {
+                    if let lastMessage = question.messages.last {
+                        scrollToMessageID = lastMessage.id
+                        
+                        proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                    }
+                }
             }
             
             Spacer()
@@ -106,6 +126,14 @@ struct MessageView: View {
                 }
             }
         }
+    }
+    
+    private func getRepliedMessage(id: String) -> Message? {
+        guard let message = question.messages.filter({ $0.id == id }).first else {
+            return nil
+        }
+        
+        return message
     }
     
     private var dateFormatter: DateFormatter {
