@@ -105,7 +105,7 @@ class ModelData: ObservableObject {
             DispatchQueue.main.async {
                 // questions 配列を更新
                 if let index = self.questions.firstIndex(where: { $0.id == questionID }) {
-                    self.questions[index].messages = updatedMessages
+                    self.questions[index].messages = updatedMessages.sorted(by: { $0.date <= $1.date })
                 }
             }
         }

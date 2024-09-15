@@ -14,14 +14,18 @@ struct Message: Hashable, Identifiable, Codable {
     var date: Date
     var content: String
     var sentBy: String
+    
+    var fileName: String?
     var code: String?
+    
     var replyTo: String?
     
-    init(id: String? = nil, date: Date, content: String, sentBy: String, code: String? = nil, replyTo: String? = nil) {
+    init(id: String? = nil, date: Date, content: String, sentBy: String, fileName: String? = nil, code: String? = nil, replyTo: String? = nil) {
         self.id = id
         self.date = date
         self.content = content
         self.sentBy = sentBy
+        self.fileName = fileName
         self.code = code
         self.replyTo = replyTo
     }
