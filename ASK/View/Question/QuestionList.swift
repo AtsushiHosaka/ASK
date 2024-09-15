@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct QuestionList: View {
     @EnvironmentObject var modelData: ModelData
     @State private var initialLoaded = false  // 新しい変数を追加して初回ロードを確認
+    @Binding var isLoggedIn: Bool  // ログイン状態をバインディング
     
     var body: some View {
         NavigationSplitView {
@@ -24,12 +26,12 @@ struct QuestionList: View {
                             } label: {
                                 QuestionRow(question: question)
                             }
-                            .onAppear {
-                                
-                            }
                         }
                     }
                 }
+                Spacer()
+                Button("Logout", action: logout)
+                
                 .toolbar {
                     ToolbarItem {
                         Button(action: addQuestion) {
@@ -62,12 +64,16 @@ struct QuestionList: View {
             let newQuestion = Question(title: title, createDate: Date(), memberID: [userId], messages: [Message(date: Date(), content: "\(title)を開始しました", sentBy: userId)])
             await modelData.addQuestion(newQuestion)
             await modelData.loadQuestions()
-            dump(modelData.questions)
         }
     }
-}
-
-#Preview {
-    QuestionList()
-        .environmentObject(ModelData())
+    
+    private func logout() {
+        do {
+            try Auth.auth().signOut()
+            UserPersistence.clearUser()
+            isLoggedIn = false  // ログアウト後にログイン画面を表示
+        } catch {
+            print("Error signing out: \(error.localizedDescription)")
+        }
+    }
 }

@@ -13,7 +13,7 @@ struct ContentView: View {
 
     var body: some View {
         if isLoggedIn {
-            QuestionList()
+            QuestionList(isLoggedIn: $isLoggedIn)
                 .frame(minWidth: 800, minHeight: 600)
         } else {
             LoginView(isLoggedIn: $isLoggedIn)

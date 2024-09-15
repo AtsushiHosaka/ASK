@@ -7,6 +7,8 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseStorage
+import FirebaseFirestore
 
 struct SignupView: View {
     @Binding var isLoggedIn: Bool
@@ -14,7 +16,9 @@ struct SignupView: View {
     @State private var password = ""
     @State private var passwordConfirmation = ""
     @State private var errorMessage: String?
-    
+    @State private var selectedImage: NSImage? // Image picker state
+    @State private var imageData: Data?
+
     var body: some View {
         VStack {
             TextField("Email", text: $email)
@@ -25,13 +29,29 @@ struct SignupView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            SecureField("PasswordConfirmation", text: $passwordConfirmation)
+            SecureField("Password Confirmation", text: $passwordConfirmation)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
+            // Image picker
+            Button("Select Image") {
+                selectImage()
+            }
+            .padding()
+            
+            if let selectedImage = selectedImage {
+                Image(nsImage: selectedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .padding()
+            }
+            
             Button("Sign Up with Email") {
                 if password == passwordConfirmation {
-                    signUpWithEmail()
+                    Task {
+                        await signUpWithEmail()
+                    }
                 } else {
                     errorMessage = "パスワードが異なります"
                 }
@@ -47,15 +67,57 @@ struct SignupView: View {
         .padding()
     }
     
-    func signUpWithEmail() {
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            if let error = error {
-                self.errorMessage = error.localizedDescription
-            } else {
-                UserPersistence.saveUser(uid: result!.user.uid, email: email, password: password)
-                self.errorMessage = nil
-                self.isLoggedIn = true
+    // Function to handle image selection
+    func selectImage() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.png, .jpeg]
+        panel.begin { response in
+            if response == .OK, let url = panel.url, let nsImage = NSImage(contentsOf: url) {
+                self.selectedImage = nsImage
+                self.imageData = nsImage.tiffRepresentation
             }
+        }
+    }
+    
+    // Sign-up function using async/await
+    func signUpWithEmail() async {
+        do {
+            let result = try await Auth.auth().createUser(withEmail: email, password: password)
+            let uid = result.user.uid
+            
+            // If image is selected, upload it
+            if let imageData = imageData {
+                let imageName = try await uploadImage(uid: uid, imageData: imageData)
+                await saveUserToFirestore(uid: uid, email: email, imageName: imageName)
+            } else {
+                await saveUserToFirestore(uid: uid, email: email, imageName: nil)
+            }
+            
+            UserPersistence.saveUser(uid: uid, email: email, password: password)
+            
+            self.isLoggedIn = true
+        } catch {
+            self.errorMessage = error.localizedDescription
+        }
+    }
+    
+    // Function to upload image to Firebase Storage using async/await
+    func uploadImage(uid: String, imageData: Data) async throws -> String {
+        let storageRef = Storage.storage().reference().child("\(uid).jpg")
+        let _ = try await storageRef.putDataAsync(imageData)
+        let downloadURL = try await storageRef.downloadURL()
+        return "\(uid).jpg"
+    }
+    
+    // Function to save user data to Firestore using async/await
+    func saveUserToFirestore(uid: String, email: String, imageName: String?) async {
+        let user = User(id: uid, name: email, imageName: imageName ?? "")
+        let db = Firestore.firestore()
+        
+        do {
+            try db.collection("users").document(uid).setData(from: user)
+        } catch {
+            self.errorMessage = "Failed to save user data: \(error.localizedDescription)"
         }
     }
 }
