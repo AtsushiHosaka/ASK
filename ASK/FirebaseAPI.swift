@@ -9,25 +9,24 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class FirebaseAPI {
+    static private let db = Firestore.firestore()
     private let db = Firestore.firestore()
     
-    // 現在ログインしているユーザーのIDがmemberIDに含まれているQuestionsを取得し、各Questionのmemberに該当するUserを代入
     func fetchQuestions() async throws -> [Question] {
         // ログインユーザーを取得します。
-        //        guard let currentUser = Auth.auth().currentUser else {
-        //            throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
-        //        }
+        guard let currentUser = Auth.auth().currentUser else {
+            throw NSError(domain: "FirebaseAPI", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
+        }
         
-        let userId = "as" /*currentUser.uid*/
+        let userId = currentUser.uid
         
-        let snapshot = try await db.collection("questions").whereField("memberID", arrayContains: userId).getDocuments()
+        let snapshot = try await db.collection("questions").whereField("memberID", arrayContains: userId).order(by: "createDate", descending: true).getDocuments()
         
-        // フィルタリングしてログインしているユーザーが含まれているスレッドだけ返す
         var questions = try snapshot.documents.compactMap { try $0.data(as: Question.self) }
         
         for index in questions.indices {
-            let questionMembers = try await fetchUsersByIds(ids: questions[index].memberID)
-            questions[index].member = questionMembers
+            questions[index].member = try await fetchUsersByIds(ids: questions[index].memberID)
+            questions[index].messages = try await loadMessages(of: questions[index].id!)
         }
         
         return questions
@@ -56,12 +55,49 @@ class FirebaseAPI {
         return users
     }
     
-    func addQuestion(question: Question) async throws {
+    private func loadMessages(of questionID: String) async throws -> [Message] {
+        let snapshot = try await db.collection("questions").document(questionID).collection("messages").order(by: "date").getDocuments()
+        
+        let messages = try snapshot.documents.compactMap { try $0.data(as: Message.self) }
+        
+        return messages
+    }
+    
+    static func addQuestion(question: Question) async throws {
         do {
-            // Firestoreに質問を追加
-            let _ = try db.collection("questions").addDocument(from: question)
+            var firestoreQuestion = question
+            firestoreQuestion.messages = nil
+            
+            try db.collection("questions").document(question.id ?? UUID().uuidString).setData(from: firestoreQuestion)
+            
+            // メッセージが存在する場合、各メッセージをFirestoreに追加
+            if let messages = question.messages {
+                for message in messages {
+                    try await addMessageToFirestore(question: question, message: message)
+                }
+            }
+            
         } catch {
+            // エラー発生時にカスタムエラーをスロー
             throw NSError(domain: "FirebaseAPI", code: 500, userInfo: [NSLocalizedDescriptionKey: "Failed to add question: \(error.localizedDescription)"])
+        }
+    }
+
+    static func addMessageToFirestore(question: Question, message: Message) async throws {
+        guard let questionID = question.id else {
+            // questionIDがnilの場合エラーをスロー
+            throw NSError(domain: "FirebaseAPI", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid question ID"])
+        }
+        
+        let db = Firestore.firestore()
+        let questionRef = db.collection("questions").document(questionID)
+        
+        do {
+            // メッセージをFirestoreに追加
+            try questionRef.collection("messages").addDocument(from: message)
+        } catch {
+            // メッセージ追加に失敗した場合にエラーをスロー
+            throw NSError(domain: "FirebaseAPI", code: 500, userInfo: [NSLocalizedDescriptionKey: "Failed to add message: \(error.localizedDescription)"])
         }
     }
 }
