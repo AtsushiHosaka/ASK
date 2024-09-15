@@ -164,7 +164,10 @@ struct MessageView: View {
                         newMessageContent = ""
                         fileName = ""
                         code = ""
-                        replyMessage = nil // 返信先をクリア
+                        replyMessage = nil
+                        showCodeDiff = false
+                        codeDiffBefore = ""
+                        codeDiffAfter = ""
                     }) {
                         Text("Send")
                     }

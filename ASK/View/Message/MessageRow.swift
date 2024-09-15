@@ -27,6 +27,11 @@ struct MessageRow: View {
                     .frame(maxWidth: isMyMessage ? 300 : .infinity)
                     .padding()
             }
+            
+            if let codeDiffBefore = message.codeDiffBefore,
+               let codeDiffAfter = message.codeDiffAfter {
+                CodeDiffView(codeDiffBefore: codeDiffBefore, codeDiffAfter: codeDiffAfter)
+            }
         }
     }
     
