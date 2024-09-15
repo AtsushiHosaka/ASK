@@ -17,6 +17,10 @@ struct MessageView: View {
     @State private var fileName: String = ""
     @State private var code: String = ""
     @State private var scrollToMessageID: String? = nil
+    @State private var replyMessage: Message? = nil
+    @State private var showCodeDiff: Bool = false
+    @State private var codeDiffBefore: String = ""
+    @State private var codeDiffAfter: String = ""
     
     var messages: [Message] {
         question.messages ?? []
@@ -32,22 +36,77 @@ struct MessageView: View {
                             .onTapGesture {
                                 scrollToMessageID = repliedMessage.id
                                 proxy.scrollTo(repliedMessage.id, anchor: .top)
-                                
                             }
                     }
+                    
                     MessageRow(message: message)
                         .id(message.id)
-                }
-                .onAppear {
-                    if let lastMessage = messages.last {
-                        scrollToMessageID = lastMessage.id
-                        
-                        proxy.scrollTo(lastMessage.id, anchor: .bottom)
-                    }
+                        .contextMenu {
+                            Button(action: {
+                                replyTo(message)
+                            }) {
+                                Text("返信する")
+                            }
+                        }
                 }
             }
             
             Spacer()
+            
+            if let replyMessage {
+                HStack {
+                    Spacer()
+                    
+                    Text("返信：\(replyMessage.content.prefix(30))...")
+                        .foregroundStyle(.secondary)
+                    
+                    Button(action: removeReply) {
+                        Image(systemName: "multiply.circle")
+                    }
+                }
+            }
+            
+            if showCodeDiff {
+                HStack {
+                    TextEditor(text: $codeDiffBefore)
+                        .font(.system(size: 14))
+                        .frame(height: max(30, textHeight))
+                        .padding()
+                        .background(GeometryReader { geometry in
+                            Color.clear.onAppear {
+                                calculateHeight(geometry: geometry)
+                            }
+                            .onChange(of: newMessageContent) {
+                                calculateHeight(geometry: geometry)
+                            }
+                        })
+                        .border(Color.gray, width: 1)
+                    
+                    Image("arrow.forward")
+                    
+                    TextEditor(text: $codeDiffAfter)
+                        .font(.system(size: 14))
+                        .frame(height: max(30, textHeight))
+                        .padding()
+                        .background(GeometryReader { geometry in
+                            Color.clear.onAppear {
+                                calculateHeight(geometry: geometry)
+                            }
+                            .onChange(of: newMessageContent) {
+                                calculateHeight(geometry: geometry)
+                            }
+                        })
+                        .border(Color.gray, width: 1)
+                    
+                    Button {
+                        showCodeDiff = false
+                    } label: {
+                        Image(systemName: "multiply.circle")
+                    }
+                    .padding()
+                }
+                .padding()
+            }
             
             VStack {
                 if !code.isEmpty {
@@ -69,16 +128,26 @@ struct MessageView: View {
                         })
                         .border(Color.gray, width: 1)
                     
-                    // ファイル選択ボタンを追加
+                    Button {
+                        showCodeDiff = true
+                    } label: {
+                        Text("Code Diff")
+                    }
+                    .padding()
+                    
                     Button(action: {
                         selectSwiftFile()
                     }) {
                         Text("Select File")
                     }
-                    .padding(.trailing)
+                    .padding()
                     
                     Button(action: {
                         var newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
+                        
+                        if let replyMessage {
+                            newMessage.replyTo = replyMessage.id
+                        }
                         if !code.isEmpty {
                             newMessage.fileName = fileName
                             newMessage.code = code
@@ -89,20 +158,29 @@ struct MessageView: View {
                         newMessageContent = ""
                         fileName = ""
                         code = ""
+                        replyMessage = nil // 返信先をクリア
                     }) {
                         Text("Send")
                     }
-                    .padding(.trailing)
+                    .padding()
                 }
                 .padding()
             }
         }
         .onAppear {
-            dump(question)
             if let id = question.id {
                 modelData.addMessagesListener(for: id)
             }
         }
+    }
+    
+    private func replyTo(_ message: Message) {
+        replyMessage = message
+        codeDiffBefore = message.code ?? ""
+    }
+    
+    private func removeReply() {
+        replyMessage = nil
     }
     
     private func calculateHeight(geometry: GeometryProxy) {
@@ -118,7 +196,7 @@ struct MessageView: View {
     
     private func selectSwiftFile() {
         let panel = NSOpenPanel()
-        panel.allowedContentTypes = [.swiftSource] // .swiftファイルのみを許可
+        panel.allowedContentTypes = [.swiftSource]
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
         
@@ -126,8 +204,8 @@ struct MessageView: View {
             if let url = panel.url {
                 do {
                     let fileContents = try String(contentsOf: url, encoding: .utf8)
-                    code = fileContents // ファイル内容をcodeに代入
-                    fileName = url.lastPathComponent // ファイル名をfileNameに代入
+                    code = fileContents
+                    fileName = url.lastPathComponent
                 } catch {
                     print("ファイルの読み込みに失敗しました: \(error)")
                 }
@@ -136,18 +214,34 @@ struct MessageView: View {
     }
     
     private func getRepliedMessage(id: String) -> Message? {
-        guard let message = messages.filter({ $0.id == id }).first else {
+        guard let message = messages.first(where: { $0.id == id }) else {
             return nil
         }
-        
         return message
     }
     
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter
+    private func compareStrings(oldText: String, newText: String) -> (deletedRows: [Int], addedRows: [Int]) {
+        let oldLines = oldText.components(separatedBy: .newlines)
+        let newLines = newText.components(separatedBy: .newlines)
+        
+        var deletedRows = [Int]()
+        var addedRows = [Int]()
+        
+        // 削除された行を検出
+        for (index, line) in oldLines.enumerated() {
+            if !newLines.contains(line) {
+                deletedRows.append(index + 1) // 行番号は1から始まるので+1
+            }
+        }
+        
+        // 追加された行を検出
+        for (index, line) in newLines.enumerated() {
+            if !oldLines.contains(line) {
+                addedRows.append(index + 1) // 行番号は1から始まるので+1
+            }
+        }
+        
+        return (deletedRows, addedRows)
     }
 }
 
