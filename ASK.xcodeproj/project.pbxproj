@@ -88,7 +88,6 @@
 		6DBDD59F2C96DA0500BB959B /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBDD59E2C96DA0500BB959B /* CodeView.swift */; };
 		6DE7A3332C970952003ADD5E /* ReplyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A3322C970952003ADD5E /* ReplyRow.swift */; };
 		6DE7A3352C9738E3003ADD5E /* CodeDiffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A3342C9738E3003ADD5E /* CodeDiffView.swift */; };
-		6DE7A3372C9740CA003ADD5E /* AttributedString+separate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A3362C9740CA003ADD5E /* AttributedString+separate.swift */; };
 		6DE7A3392C97536C003ADD5E /* AddMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A3382C97536C003ADD5E /* AddMemberView.swift */; };
 /* End PBXBuildFile section */
 
@@ -122,7 +121,6 @@
 		6DBDD59E2C96DA0500BB959B /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
 		6DE7A3322C970952003ADD5E /* ReplyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyRow.swift; sourceTree = "<group>"; };
 		6DE7A3342C9738E3003ADD5E /* CodeDiffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeDiffView.swift; sourceTree = "<group>"; };
-		6DE7A3362C9740CA003ADD5E /* AttributedString+separate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+separate.swift"; sourceTree = "<group>"; };
 		6DE7A3382C97536C003ADD5E /* AddMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -217,7 +215,6 @@
 			children = (
 				6DBDD33D2C949C1D00BB959B /* ASKApp.swift */,
 				6DBDD4072C94B33500BB959B /* FirebaseAPI.swift */,
-				6DE7A3362C9740CA003ADD5E /* AttributedString+separate.swift */,
 				6DBDD3502C94A0B100BB959B /* Model */,
 				6DBDD3552C94A32500BB959B /* View */,
 				6DBDD3432C949C1E00BB959B /* Assets.xcassets */,
@@ -478,7 +475,6 @@
 				6DBDD33E2C949C1D00BB959B /* ASKApp.swift in Sources */,
 				6DBDD59F2C96DA0500BB959B /* CodeView.swift in Sources */,
 				6DBDD5432C952DF000BB959B /* ContentView.swift in Sources */,
-				6DE7A3372C9740CA003ADD5E /* AttributedString+separate.swift in Sources */,
 				6DBDD59D2C96D65900BB959B /* MessageRow.swift in Sources */,
 				6DBDD3542C94A2B800BB959B /* Message.swift in Sources */,
 				6DBDD34F2C949FA600BB959B /* User.swift in Sources */,
