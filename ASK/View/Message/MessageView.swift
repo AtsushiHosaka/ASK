@@ -144,13 +144,20 @@ struct MessageView: View {
                     Button(action: {
                         var newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
                         
-                        if let replyMessage {
-                            newMessage.replyTo = replyMessage.id
-                        }
                         if !code.isEmpty {
                             newMessage.fileName = fileName
                             newMessage.code = code
                         }
+                        
+                        if !codeDiffBefore.isEmpty, !codeDiffAfter.isEmpty {
+                            newMessage.codeDiffBefore = codeDiffBefore
+                            newMessage.codeDiffAfter = codeDiffAfter
+                        }
+                        
+                        if let replyMessage {
+                            newMessage.replyTo = replyMessage.id
+                        }
+                        
                         Task {
                             try await FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
                         }
