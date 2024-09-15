@@ -70,7 +70,6 @@ struct MessageView: View {
                 HStack {
                     TextEditor(text: $codeDiffBefore)
                         .font(.system(size: 14))
-                        .frame(height: max(30, textHeight))
                         .padding()
                         .background(GeometryReader { geometry in
                             Color.clear.onAppear {
@@ -82,11 +81,10 @@ struct MessageView: View {
                         })
                         .border(Color.gray, width: 1)
                     
-                    Image("arrow.forward")
+                    Image(systemName: "arrow.forward")
                     
                     TextEditor(text: $codeDiffAfter)
                         .font(.system(size: 14))
-                        .frame(height: max(30, textHeight))
                         .padding()
                         .background(GeometryReader { geometry in
                             Color.clear.onAppear {
@@ -105,6 +103,7 @@ struct MessageView: View {
                     }
                     .padding()
                 }
+                .frame(height: 200)
                 .padding()
             }
             
@@ -191,7 +190,7 @@ struct MessageView: View {
         ]
         let attributedText = NSAttributedString(string: newMessageContent, attributes: attributes)
         let boundingRect = attributedText.boundingRect(with: size, options: .usesLineFragmentOrigin, context: nil)
-        textHeight = min(boundingRect.height * 0.95 + 20, 200)
+        textHeight = min(boundingRect.height * 0.95 + 20, 150)
     }
     
     private func selectSwiftFile() {
