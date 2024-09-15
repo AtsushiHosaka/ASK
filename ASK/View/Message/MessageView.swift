@@ -40,7 +40,7 @@ struct MessageView: View {
                                 }
                         }
                         
-                        MessageRow(message: message)
+                        MessageRow(message: message, user: question.member!.first(where: { $0.id == message.sentBy })!)
                             .id(message.id)
                             .contextMenu {
                                 Button(action: {

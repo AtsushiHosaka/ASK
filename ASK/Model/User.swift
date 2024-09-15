@@ -13,8 +13,17 @@ struct User: Hashable, Identifiable, Codable {
     @DocumentID var id: String?
     var name: String
     
-    private var imageName: String
+    var imageName: String
+    var imageData: Data?
+    
     var image: Image? {
         Image(imageName)
+    }
+    
+    init(id: String? = nil, name: String, imageName: String, imageData: Data? = nil) {
+        self.id = id
+        self.name = name
+        self.imageName = imageName
+        self.imageData = imageData
     }
 }

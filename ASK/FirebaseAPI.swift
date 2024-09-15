@@ -7,6 +7,7 @@
 
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseStorage
 
 class FirebaseAPI {
     static private let db = Firestore.firestore()
@@ -40,19 +41,32 @@ class FirebaseAPI {
             do {
                 let userDocument = try await db.collection("users").document(id).getDocument()
                 
-                if let user = try? userDocument.data(as: User.self) {
+                if var user = try? userDocument.data(as: User.self) {
+                    user.imageData = await fetchImageData(from: user.imageName)
                     users.append(user)
                 } else {
-                    // ユーザーが存在しない場合の処理
                     print("User with ID \(id) not found in database")
                 }
             } catch {
-                // ユーザー取得に失敗した場合はログ出力のみ
                 print("Failed to fetch user with ID \(id): \(error.localizedDescription)")
             }
         }
         
         return users
+    }
+    
+    func fetchImageData(from imageName: String) async -> Data? {
+        let storage = Storage.storage()
+        let storageRef = storage.reference().child("\(imageName)")
+        
+        // Download the image data
+        do {
+            let imageData = try await storageRef.data(maxSize: 5 * 1024 * 1024) // Limit to 5MB
+            
+            return imageData
+        } catch {
+            return nil
+        }
     }
     
     private func loadMessages(of questionID: String) async throws -> [Message] {
