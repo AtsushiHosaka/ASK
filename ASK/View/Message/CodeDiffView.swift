@@ -39,6 +39,7 @@ struct CodeDiffView: View {
                     ForEach(Array(linesBefore.enumerated()), id: \.element) { index, line in
                         Text(AttributedString(highlighter.highlight(line)))
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(1)
                             .background(deletedRows.contains(index + 1) ? Color.red : Color.clear)
                     }
                 }
@@ -51,6 +52,7 @@ struct CodeDiffView: View {
                     ForEach(Array(linesAfter.enumerated()), id: \.element) { index, line in
                         Text(AttributedString(highlighter.highlight(line)))
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(1)
                             .background(addedRows.contains(index + 1) ? Color.green : Color.clear)
                     }
                 }
