@@ -10,7 +10,7 @@ import AppKit
 
 struct MessageView: View {
     @EnvironmentObject var modelData: ModelData
-    
+    @State private var showAddMemberView: Bool = false
     var question: Question
     @State private var newMessageContent: String = ""
     @State private var textHeight: CGFloat = 30
@@ -27,153 +27,173 @@ struct MessageView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ScrollViewReader { proxy in
-                List(messages) { message in
-                    if let replyTo = message.replyTo,
-                       let repliedMessage = getRepliedMessage(id: replyTo) {
-                        ReplyRow(message: message)
-                            .onTapGesture {
-                                scrollToMessageID = repliedMessage.id
-                                proxy.scrollTo(repliedMessage.id, anchor: .top)
-                            }
-                    }
-                    
-                    MessageRow(message: message)
-                        .id(message.id)
-                        .contextMenu {
-                            Button(action: {
-                                replyTo(message)
-                            }) {
-                                Text("返信する")
-                            }
+        HStack {
+            VStack(alignment: .leading) {
+                ScrollViewReader { proxy in
+                    List(messages) { message in
+                        if let replyTo = message.replyTo,
+                           let repliedMessage = getRepliedMessage(id: replyTo) {
+                            ReplyRow(message: message)
+                                .onTapGesture {
+                                    scrollToMessageID = repliedMessage.id
+                                    proxy.scrollTo(repliedMessage.id, anchor: .top)
+                                }
                         }
-                }
-            }
-            
-            Spacer()
-            
-            if let replyMessage {
-                HStack {
-                    Spacer()
-                    
-                    Text("返信：\(replyMessage.content.prefix(30))...")
-                        .foregroundStyle(.secondary)
-                    
-                    Button(action: removeReply) {
-                        Image(systemName: "multiply.circle")
+                        
+                        MessageRow(message: message)
+                            .id(message.id)
+                            .contextMenu {
+                                Button(action: {
+                                    replyTo(message)
+                                }) {
+                                    Text("返信する")
+                                }
+                            }
                     }
-                }
-            }
-            
-            if showCodeDiff {
-                HStack {
-                    TextEditor(text: $codeDiffBefore)
-                        .font(.system(size: 14))
-                        .padding()
-                        .background(GeometryReader { geometry in
-                            Color.clear.onAppear {
-                                calculateHeight(geometry: geometry)
-                            }
-                            .onChange(of: newMessageContent) {
-                                calculateHeight(geometry: geometry)
-                            }
-                        })
-                        .border(Color.gray, width: 1)
-                    
-                    Image(systemName: "arrow.forward")
-                    
-                    TextEditor(text: $codeDiffAfter)
-                        .font(.system(size: 14))
-                        .padding()
-                        .background(GeometryReader { geometry in
-                            Color.clear.onAppear {
-                                calculateHeight(geometry: geometry)
-                            }
-                            .onChange(of: newMessageContent) {
-                                calculateHeight(geometry: geometry)
-                            }
-                        })
-                        .border(Color.gray, width: 1)
-                    
-                    Button {
-                        showCodeDiff = false
-                    } label: {
-                        Image(systemName: "multiply.circle")
-                    }
-                    .padding()
-                }
-                .frame(height: 200)
-                .padding()
-            }
-            
-            VStack {
-                if !code.isEmpty {
-                    CodeView(fileName: fileName, code: code)
                 }
                 
-                HStack {
-                    TextEditor(text: $newMessageContent)
-                        .font(.system(size: 14))
-                        .frame(height: max(30, textHeight))
+                Spacer()
+                
+                if let replyMessage {
+                    HStack {
+                        Spacer()
+                        
+                        Text("返信：\(replyMessage.content.prefix(30))...")
+                            .foregroundStyle(.secondary)
+                        
+                        Button(action: removeReply) {
+                            Image(systemName: "multiply.circle")
+                        }
+                    }
+                }
+                
+                if showCodeDiff {
+                    HStack {
+                        TextEditor(text: $codeDiffBefore)
+                            .font(.system(size: 14))
+                            .padding()
+                            .background(GeometryReader { geometry in
+                                Color.clear.onAppear {
+                                    calculateHeight(geometry: geometry)
+                                }
+                                .onChange(of: newMessageContent) {
+                                    calculateHeight(geometry: geometry)
+                                }
+                            })
+                            .border(Color.gray, width: 1)
+                        
+                        Image(systemName: "arrow.forward")
+                        
+                        TextEditor(text: $codeDiffAfter)
+                            .font(.system(size: 14))
+                            .padding()
+                            .background(GeometryReader { geometry in
+                                Color.clear.onAppear {
+                                    calculateHeight(geometry: geometry)
+                                }
+                                .onChange(of: newMessageContent) {
+                                    calculateHeight(geometry: geometry)
+                                }
+                            })
+                            .border(Color.gray, width: 1)
+                        
+                        Button {
+                            showCodeDiff = false
+                        } label: {
+                            Image(systemName: "multiply.circle")
+                        }
                         .padding()
-                        .background(GeometryReader { geometry in
-                            Color.clear.onAppear {
-                                calculateHeight(geometry: geometry)
-                            }
-                            .onChange(of: newMessageContent) {
-                                calculateHeight(geometry: geometry)
-                            }
-                        })
-                        .border(Color.gray, width: 1)
-                    
-                    Button {
-                        showCodeDiff = true
-                    } label: {
-                        Text("Code Diff")
                     }
+                    .frame(height: 200)
                     .padding()
-                    
-                    Button(action: {
-                        selectSwiftFile()
-                    }) {
-                        Text("Select File")
+                }
+                
+                VStack {
+                    if !code.isEmpty {
+                        CodeView(fileName: fileName, code: code)
                     }
-                    .padding()
                     
-                    Button(action: {
-                        var newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
+                    HStack {
+                        TextEditor(text: $newMessageContent)
+                            .font(.system(size: 14))
+                            .frame(height: max(30, textHeight))
+                            .padding()
+                            .background(GeometryReader { geometry in
+                                Color.clear.onAppear {
+                                    calculateHeight(geometry: geometry)
+                                }
+                                .onChange(of: newMessageContent) {
+                                    calculateHeight(geometry: geometry)
+                                }
+                            })
+                            .border(Color.gray, width: 1)
                         
-                        if !code.isEmpty {
-                            newMessage.fileName = fileName
-                            newMessage.code = code
+                        Button {
+                            showCodeDiff = true
+                        } label: {
+                            Text("Code Diff")
                         }
+                        .padding()
                         
-                        if !codeDiffBefore.isEmpty, !codeDiffAfter.isEmpty {
-                            newMessage.codeDiffBefore = codeDiffBefore
-                            newMessage.codeDiffAfter = codeDiffAfter
+                        Button(action: {
+                            selectSwiftFile()
+                        }) {
+                            Text("Select File")
                         }
+                        .padding()
                         
-                        if let replyMessage {
-                            newMessage.replyTo = replyMessage.id
+                        Button(action: {
+                            var newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
+                            
+                            if !code.isEmpty {
+                                newMessage.fileName = fileName
+                                newMessage.code = code
+                            }
+                            
+                            if !codeDiffBefore.isEmpty, !codeDiffAfter.isEmpty {
+                                newMessage.codeDiffBefore = codeDiffBefore
+                                newMessage.codeDiffAfter = codeDiffAfter
+                            }
+                            
+                            if let replyMessage {
+                                newMessage.replyTo = replyMessage.id
+                            }
+                            
+                            Task {
+                                try await FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
+                            }
+                            newMessageContent = ""
+                            fileName = ""
+                            code = ""
+                            replyMessage = nil
+                            showCodeDiff = false
+                            codeDiffBefore = ""
+                            codeDiffAfter = ""
+                        }) {
+                            Text("Send")
                         }
-                        
-                        Task {
-                            try await FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
-                        }
-                        newMessageContent = ""
-                        fileName = ""
-                        code = ""
-                        replyMessage = nil
-                        showCodeDiff = false
-                        codeDiffBefore = ""
-                        codeDiffAfter = ""
-                    }) {
-                        Text("Send")
+                        .padding()
                     }
                     .padding()
                 }
-                .padding()
+                .toolbar {
+                    ToolbarItem {
+                        Button(action: {
+                            withAnimation {
+                                showAddMemberView.toggle()
+                            }
+                        }) {
+                            Image(systemName: "person.fill.badge.plus")
+                                .imageScale(.large)
+                        }
+                    }
+                }
+            }
+            
+            if showAddMemberView {
+                AddMemberView(question: question)
+                    .frame(width: 300)
+                    .transition(.move(edge: .trailing))
             }
         }
         .onAppear {
