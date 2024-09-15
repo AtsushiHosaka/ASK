@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct MessageView: View {
     @EnvironmentObject var modelData: ModelData
@@ -13,6 +14,7 @@ struct MessageView: View {
     var question: Question
     @State private var newMessageContent: String = ""
     @State private var textHeight: CGFloat = 30
+    @State private var code: String = ""
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,31 +22,47 @@ struct MessageView: View {
                 Text(message.content)
             }
             
-            HStack {
-                TextEditor(text: $newMessageContent)
-                    .font(.system(size: 17))
-                    .frame(height: max(30, textHeight))
-                    .padding()
-                    .background(GeometryReader { geometry in
-                        Color.clear.onAppear {
-                            calculateHeight(geometry: geometry)
-                        }
-                        .onChange(of: newMessageContent) {
-                            calculateHeight(geometry: geometry)
-                        }
-                    })
-                    .border(Color.gray, width: 1)
+            Spacer()
+            
+            
+            
+            VStack {
+                Text(code)
                 
-                Button(action: {
-                    let newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
-                    FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
-                    newMessageContent = ""
-                }) {
-                    Text("Send")
+                HStack {
+                    TextEditor(text: $newMessageContent)
+                        .font(.system(size: 17))
+                        .frame(height: max(30, textHeight))
+                        .padding()
+                        .background(GeometryReader { geometry in
+                            Color.clear.onAppear {
+                                calculateHeight(geometry: geometry)
+                            }
+                            .onChange(of: newMessageContent) {
+                                calculateHeight(geometry: geometry)
+                            }
+                        })
+                        .border(Color.gray, width: 1)
+                    
+                    // ファイル選択ボタンを追加
+                    Button(action: {
+                        selectSwiftFile()
+                    }) {
+                        Text("Select File")
+                    }
+                    .padding(.trailing)
+                    
+                    Button(action: {
+                        let newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
+                        FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
+                        newMessageContent = ""
+                    }) {
+                        Text("Send")
+                    }
+                    .padding(.trailing)
                 }
-                .padding(.trailing)
+                .padding()
             }
-            .padding()
         }
         .onAppear {
             if let id = question.id {
@@ -61,7 +79,25 @@ struct MessageView: View {
         ]
         let attributedText = NSAttributedString(string: newMessageContent, attributes: attributes)
         let boundingRect = attributedText.boundingRect(with: size, options: .usesLineFragmentOrigin, context: nil)
-        textHeight = max(boundingRect.height * 0.95 + 20, 200)
+        textHeight = min(boundingRect.height * 0.95 + 20, 200)
+    }
+    
+    private func selectSwiftFile() {
+        let panel = NSOpenPanel()
+        panel.allowedFileTypes = ["swift"] // .swiftファイルのみを許可
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        
+        if panel.runModal() == .OK {
+            if let url = panel.url {
+                do {
+                    let fileContents = try String(contentsOf: url, encoding: .utf8)
+                    code = fileContents // ファイル内容をcodeに代入
+                } catch {
+                    print("ファイルの読み込みに失敗しました: \(error)")
+                }
+            }
+        }
     }
     
     private var dateFormatter: DateFormatter {
