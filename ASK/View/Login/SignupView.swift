@@ -20,51 +20,78 @@ struct SignupView: View {
     @State private var imageData: Data?
 
     var body: some View {
-        VStack {
-            TextField("Email", text: $email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+        VStack(spacing: 20) {
+            Spacer()
+            Spacer()
             
-            SecureField("Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+            Text("ASK")
+                .font(.custom("HelveticaNeue", size: 60))
+                .fontWeight(.heavy)
+                .foregroundStyle(.indigo)
             
-            SecureField("Password Confirmation", text: $passwordConfirmation)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+            Spacer()
             
-            // Image picker
-            Button("Select Image") {
+            AuthTextField(title: "メールアドレス", text: $email)
+            
+            AuthSecureField(title: "パスワード", text: $password)
+            
+            AuthSecureField(title: "パスワード確認", text: $passwordConfirmation)
+            
+            Button {
                 selectImage()
-            }
-            .padding()
-            
-            if let selectedImage = selectedImage {
-                Image(nsImage: selectedImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .padding()
-            }
-            
-            Button("Sign Up with Email") {
-                if password == passwordConfirmation {
-                    Task {
-                        await signUpWithEmail()
-                    }
+            } label: {
+                if let selectedImage = selectedImage {
+                    Image(nsImage: selectedImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .clipShape(Circle())
+                        .padding()
                 } else {
-                    errorMessage = "パスワードが異なります"
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .clipShape(Circle())
+                        .padding()
                 }
             }
-            .padding()
+            .buttonStyle(ClearBackgroundButtonStyle())
+            
+            Text("アイコンを選択")
+                .font(.custom("HelveticaNeue", size: 16))
+                .foregroundStyle(.secondary)
+                .padding(.top, -20)
+            
+            Button {
+                checkSignup()
+            } label: {
+                AuthButton(icon: "envelope", text: "アカウント作成")
+                    .frame(maxWidth: 300)
+            }
+            .buttonStyle(ClearBackgroundButtonStyle())
+            
             
             if let errorMessage = errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.red)
                     .padding()
             }
+            
+            Spacer()
+            Spacer()
         }
         .padding()
+    }
+    
+    private func checkSignup() {
+        if password == passwordConfirmation {
+            Task {
+                await signUpWithEmail()
+            }
+        } else {
+            errorMessage = "パスワードが異なります"
+        }
     }
     
     // Function to handle image selection

@@ -21,5 +21,6 @@ struct ASKApp: App {
             ContentView()
                 .environmentObject(modelData)
         }
+        .windowStyle(HiddenTitleBarWindowStyle())
     }
 }

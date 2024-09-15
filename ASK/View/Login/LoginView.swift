@@ -16,19 +16,28 @@ struct LoginView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                TextField("Email", text: $email)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+            VStack(spacing: 20) {
+                Spacer()
+                Spacer()
                 
-                SecureField("Password", text: $password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+                Text("ASK")
+                    .font(.custom("HelveticaNeue", size: 60))
+                    .fontWeight(.heavy)
+                    .foregroundStyle(.indigo)
                 
-                Button("Login with Email") {
+                Spacer()
+                
+                AuthTextField(title: "メールアドレス", text: $email)
+                
+                AuthSecureField(title: "パスワード", text: $password)
+                
+                Button {
                     loginWithEmail()
+                } label: {
+                    AuthButton(icon: "envelope", text: "ログイン")
+                        .frame(maxWidth: 300)
                 }
-                .padding()
+                .buttonStyle(ClearBackgroundButtonStyle())
                 
                 if let errorMessage = errorMessage {
                     Text(errorMessage)
@@ -39,12 +48,17 @@ struct LoginView: View {
                 NavigationLink {
                     SignupView(isLoggedIn: $isLoggedIn)
                 } label: {
-                    Text("Sign Up with Email")
-                    .padding()
+                    AuthButton(icon: "envelope", text: "登録")
+                        .frame(maxWidth: 300)
                 }
+                .navigationTitle("アカウント作成")
+                .buttonStyle(ClearBackgroundButtonStyle())
+                
+                Spacer()
+                Spacer()
             }
-            .padding()
         }
+        .background(Color.clear)
     }
     
     func loginWithEmail() {

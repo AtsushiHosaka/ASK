@@ -12,14 +12,19 @@ struct ContentView: View {
     @State private var isLoggedIn = false
 
     var body: some View {
-        if isLoggedIn {
-            QuestionList(isLoggedIn: $isLoggedIn)
-                .frame(minWidth: 800, minHeight: 600)
-        } else {
-            LoginView(isLoggedIn: $isLoggedIn)
-                .onAppear {
-                    checkIfLoggedIn()
-                }
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.white, .blue.opacity(0.2), .white, .purple.opacity(0.2), .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                            .ignoresSafeArea()
+            
+            if isLoggedIn {
+                QuestionList(isLoggedIn: $isLoggedIn)
+                    .frame(minWidth: 800, minHeight: 600)
+            } else {
+                LoginView(isLoggedIn: $isLoggedIn)
+                    .onAppear {
+                        checkIfLoggedIn()
+                    }
+            }
         }
     }
     
