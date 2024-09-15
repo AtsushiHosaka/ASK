@@ -257,7 +257,7 @@ struct ChatView: View {
         }
         
         Task {
-            try await FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
+            try await FirestoreAPI.addMessageToFirestore(question: question, message: newMessage)
         }
         newMessageContent = ""
         fileName = ""

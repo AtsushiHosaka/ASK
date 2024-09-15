@@ -97,7 +97,6 @@ struct SignupView: View {
         }
     }
     
-    // Function to handle image selection
     func selectImage() {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.png, .jpeg]
@@ -109,18 +108,16 @@ struct SignupView: View {
         }
     }
     
-    // Sign-up function using async/await
     func signUpWithEmail() async {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             let uid = result.user.uid
             
-            // If image is selected, upload it
             if let imageData = imageData {
-                let imageName = try await uploadImage(uid: uid, imageData: imageData)
-                await saveUserToFirestore(uid: uid, name: name, imageName: imageName)
+                let imageName = try await FirebaseStorageAPI.uploadImage(uid: uid, imageData: imageData)
+                await FirestoreAPI.saveUserToFirestore(uid: uid, name: name, imageName: imageName)
             } else {
-                await saveUserToFirestore(uid: uid, name: name, imageName: nil)
+                await FirestoreAPI.saveUserToFirestore(uid: uid, name: name, imageName: nil)
             }
             
             UserPersistence.saveUser(uid: uid, email: email, password: password)
@@ -128,26 +125,6 @@ struct SignupView: View {
             self.isLoggedIn = true
         } catch {
             self.errorMessage = error.localizedDescription
-        }
-    }
-    
-    // Function to upload image to Firebase Storage using async/await
-    func uploadImage(uid: String, imageData: Data) async throws -> String {
-        let storageRef = Storage.storage().reference().child("\(uid).jpg")
-        let _ = try await storageRef.putDataAsync(imageData)
-        let downloadURL = try await storageRef.downloadURL()
-        return "\(uid).jpg"
-    }
-    
-    // Function to save user data to Firestore using async/await
-    func saveUserToFirestore(uid: String, name: String, imageName: String?) async {
-        let user = User(id: uid, name: name, imageName: imageName ?? "")
-        let db = Firestore.firestore()
-        
-        do {
-            try db.collection("users").document(uid).setData(from: user)
-        } catch {
-            self.errorMessage = "Failed to save user data: \(error.localizedDescription)"
         }
     }
 }
