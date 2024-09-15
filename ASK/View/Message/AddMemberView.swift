@@ -79,6 +79,8 @@ struct AddMemberView: View {
             ]) { error in
                 if let error = error {
                     print("Error updating question: \(error)")
+                } else {
+                    dismiss()
                 }
             }
     }
