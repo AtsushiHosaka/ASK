@@ -12,6 +12,7 @@ import FirebaseFirestore
 
 struct SignupView: View {
     @Binding var isLoggedIn: Bool
+    @State private var name = ""
     @State private var email = ""
     @State private var password = ""
     @State private var passwordConfirmation = ""
@@ -30,6 +31,8 @@ struct SignupView: View {
                 .foregroundStyle(.indigo)
             
             Spacer()
+            
+            AuthTextField(title: "名前", text: $name)
             
             AuthTextField(title: "メールアドレス", text: $email)
             
@@ -115,9 +118,9 @@ struct SignupView: View {
             // If image is selected, upload it
             if let imageData = imageData {
                 let imageName = try await uploadImage(uid: uid, imageData: imageData)
-                await saveUserToFirestore(uid: uid, email: email, imageName: imageName)
+                await saveUserToFirestore(uid: uid, name: name, imageName: imageName)
             } else {
-                await saveUserToFirestore(uid: uid, email: email, imageName: nil)
+                await saveUserToFirestore(uid: uid, name: name, imageName: nil)
             }
             
             UserPersistence.saveUser(uid: uid, email: email, password: password)
@@ -137,8 +140,8 @@ struct SignupView: View {
     }
     
     // Function to save user data to Firestore using async/await
-    func saveUserToFirestore(uid: String, email: String, imageName: String?) async {
-        let user = User(id: uid, name: email, imageName: imageName ?? "")
+    func saveUserToFirestore(uid: String, name: String, imageName: String?) async {
+        let user = User(id: uid, name: name, imageName: imageName ?? "")
         let db = Firestore.firestore()
         
         do {

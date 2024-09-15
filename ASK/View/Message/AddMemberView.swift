@@ -26,19 +26,39 @@ struct AddMemberView: View {
     
     var body: some View {
         VStack {
+            Text("ユーザーを追加")
+                .font(.custom("HelveticaNeue", size: 30))
+                .fontWeight(.black)
+                .foregroundStyle(.indigo)
+            
             TextField("Search Users", text: $searchText)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .font(.custom("Helvetica Neue", size: 18))
+                .padding(.bottom, 8)
+                .background(Color.clear)
+                .overlay(Rectangle().frame(height: 1).foregroundColor(.gray), alignment: .bottom)
+                .textFieldStyle(PlainTextFieldStyle())
                 .onChange(of: searchText) {
                     fetchUsers(for: searchText)
                 }
             
             List(users) { user in
-                Text(user.name)
-                    .onTapGesture {
-                        selectedUser = user
-                    }
+                HStack {
+                    UserIcon(user: user)
+                    Text(user.name)
+                        .font(.custom("HelveticaNeue", size: 16))
+                }
+                .frame(maxWidth: .infinity)
+                .listRowSeparator(.hidden)
+                .padding(.vertical)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.5))
+                )
+                .onTapGesture {
+                    selectedUser = user
+                }
             }
+            .scrollContentBackground(.hidden)
         }
         .padding()
         .alert(item: $selectedUser) { user in

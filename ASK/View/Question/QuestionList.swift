@@ -13,6 +13,8 @@ struct QuestionList: View {
     @State private var initialLoaded = false  // 新しい変数を追加して初回ロードを確認
     @Binding var isLoggedIn: Bool  // ログイン状態をバインディング
     
+    @State private var showingAlert = false
+    
     var body: some View {
         NavigationSplitView {
             if modelData.isLoading && !initialLoaded {  // 初回ロード時にのみ表示
@@ -30,29 +32,53 @@ struct QuestionList: View {
                     }
                 }
                 Spacer()
-                Button("Logout", action: logout)
                 
-                .toolbar {
-                    ToolbarItem {
-                        Button(action: addQuestion) {
-                            Label("Add Item", systemImage: "plus")
+                    .toolbar {
+                        ToolbarItem {
+                            Button(action: addQuestion) {
+                                Label("Add Item", systemImage: "plus")
+                            }
                         }
-                    }
-                }
-                .onAppear {
-                    if !initialLoaded {
-                        Task {
-                            if modelData.questions.isEmpty {
-                                modelData.addQuestionsListener()
-                                await modelData.loadQuestions()
-                                initialLoaded = true  // 初回ロード完了を設定
+                        ToolbarItem {
+                            Button{
+                                showingAlert = true
+                            } label: {
+                                Label("logout", systemImage: "rectangle.portrait.and.arrow.right")
+                            }
+                            .alert(isPresented: $showingAlert) {
+                                Alert(
+                                    title: Text("ログアウトしますか？"),
+                                    primaryButton: .destructive(Text("ログアウト")) {
+                                        logout()
+                                    },
+                                    secondaryButton: .cancel()
+                                )
                             }
                         }
                     }
-                }
+                    .onAppear {
+                        if !initialLoaded {
+                            Task {
+                                if modelData.questions.isEmpty {
+                                    modelData.addQuestionsListener()
+                                    await modelData.loadQuestions()
+                                    initialLoaded = true  // 初回ロード完了を設定
+                                }
+                            }
+                        }
+                    }
             }
         } detail: {
-            Text("Select an item")
+            VStack {
+                Text("ASK")
+                    .font(.custom("HelveticaNeue", size: 60))
+                    .fontWeight(.heavy)
+                    .foregroundStyle(.white)
+                Text("チャットを選択")
+                    .font(.custom("HelveticaNeue", size: 16))
+                    .foregroundStyle(.white)
+            }
+            .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 8, x: 0, y: 0)
         }
     }
     
