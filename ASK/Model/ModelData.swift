@@ -63,7 +63,7 @@ class ModelData: ObservableObject {
                         }
                         
                         DispatchQueue.main.async {
-                            self.questions = questions.sorted(by: { $0.createDate >= $1.createDate })
+                            self.questions = questions
                             self.isLoading = false  // 質問取得後にローディングを終了
                         }
                     } catch {
@@ -78,7 +78,7 @@ class ModelData: ObservableObject {
     
     func addMessagesListener(for questionID: String) {
         let db = Firestore.firestore()
-        let messagesRef = db.collection("questions").document(questionID).collection("messages")
+        let messagesRef = db.collection("questions").document(questionID).collection("messages").order(by: "date")
         
         // 既存のリスナーがあれば削除
         messageListeners[questionID]?.remove()
@@ -105,7 +105,7 @@ class ModelData: ObservableObject {
             DispatchQueue.main.async {
                 // questions 配列を更新
                 if let index = self.questions.firstIndex(where: { $0.id == questionID }) {
-                    self.questions[index].messages = updatedMessages.sorted(by: { $0.date <= $1.date })
+                    self.questions[index].messages = updatedMessages
                 }
             }
         }
@@ -122,13 +122,13 @@ class ModelData: ObservableObject {
             let fetchedQuestions = try await firebaseAPI.fetchQuestions()
             
             DispatchQueue.main.async {
-                self.questions = fetchedQuestions.sorted(by: { $0.createDate >= $1.createDate })
-                self.isLoading = false  // 質問取得後にローディングを終了
+                self.questions = fetchedQuestions
+                self.isLoading = false
             }
         } catch {
             print("Error fetching questions: \(error)")
             DispatchQueue.main.async {
-                self.isLoading = false  // エラー時にローディングを終了
+                self.isLoading = false
             }
         }
     }
@@ -160,7 +160,7 @@ class ModelData: ObservableObject {
         }
         
         do {
-            try await firebaseAPI.addQuestion(question: question)
+            try await FirebaseAPI.addQuestion(question: question)
             
             DispatchQueue.main.async {
                 self.isLoading = false  // 質問追加後にローディングを終了

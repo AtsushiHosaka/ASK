@@ -18,10 +18,14 @@ struct MessageView: View {
     @State private var code: String = ""
     @State private var scrollToMessageID: String? = nil
     
+    var messages: [Message] {
+        question.messages ?? []
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             ScrollViewReader { proxy in
-                List(question.messages) { message in
+                List(messages) { message in
                     if let replyTo = message.replyTo,
                        let repliedMessage = getRepliedMessage(id: replyTo) {
                         ReplyRow(message: message)
@@ -35,7 +39,7 @@ struct MessageView: View {
                         .id(message.id)
                 }
                 .onAppear {
-                    if let lastMessage = question.messages.last {
+                    if let lastMessage = messages.last {
                         scrollToMessageID = lastMessage.id
                         
                         proxy.scrollTo(lastMessage.id, anchor: .bottom)
@@ -79,7 +83,9 @@ struct MessageView: View {
                             newMessage.fileName = fileName
                             newMessage.code = code
                         }
-                        FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
+                        Task {
+                            try await FirebaseAPI.addMessageToFirestore(question: question, message: newMessage)
+                        }
                         newMessageContent = ""
                         fileName = ""
                         code = ""
@@ -92,6 +98,7 @@ struct MessageView: View {
             }
         }
         .onAppear {
+            dump(question)
             if let id = question.id {
                 modelData.addMessagesListener(for: id)
             }
@@ -129,7 +136,7 @@ struct MessageView: View {
     }
     
     private func getRepliedMessage(id: String) -> Message? {
-        guard let message = question.messages.filter({ $0.id == id }).first else {
+        guard let message = messages.filter({ $0.id == id }).first else {
             return nil
         }
         
