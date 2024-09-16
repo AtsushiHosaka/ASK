@@ -9,18 +9,18 @@ import SwiftUI
 import FirebaseAuth
 
 struct ContentView: View {
-    @State private var isLoggedIn = false
+    @ObservedObject var loginManager = LoginManager.shared
 
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.white, .blue.opacity(0.2), .white, .purple.opacity(0.2), .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
                             .ignoresSafeArea()
             
-            if isLoggedIn {
-                QuestionList(isLoggedIn: $isLoggedIn)
+            if loginManager.isLoggedIn {
+                QuestionList()
                     .frame(minWidth: 800, minHeight: 600)
             } else {
-                LoginView(isLoggedIn: $isLoggedIn)
+                LoginView()
                     .onAppear {
                         checkIfLoggedIn()
                     }
@@ -29,8 +29,8 @@ struct ContentView: View {
     }
     
     private func checkIfLoggedIn() {
-        if let email = UserPersistence.loadUserEmail(), 
-           let password = UserPersistence.loadUserPassword() {
+        if let email = LoginManager.loadUserEmail(),
+           let password = LoginManager.loadUserPassword() {
             
             loginWithEmail(email: email, password: password)
         }
@@ -41,7 +41,7 @@ struct ContentView: View {
             if let error = error {
                 print(error.localizedDescription)
             } else {
-                self.isLoggedIn = true
+                self.loginManager.isLoggedIn = true
             }
         }
     }

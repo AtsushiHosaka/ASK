@@ -240,7 +240,7 @@ struct ChatView: View {
     }
     
     private func newMessage() {
-        var newMessage = Message(date: Date(), content: newMessageContent, sentBy: UserPersistence.loadUserUID()!)
+        var newMessage = Message(date: Date(), content: newMessageContent, sentBy: LoginManager.loadUserUID()!)
         
         if !code.isEmpty {
             newMessage.fileName = fileName

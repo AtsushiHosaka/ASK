@@ -1,13 +1,16 @@
 //
-//  UserPersistence.swift
+//  LoginManager.swift
 //  ASK
 //
 //  Created by 保坂篤志 on 2024/09/14.
 //
 
 import Foundation
+import SwiftUI
 
-struct UserPersistence {
+class LoginManager: ObservableObject {
+    static var shared = LoginManager()
+    
     private static let userEmailKey = "savedUserEmail"
     private static let userPasswordKey = "savedUserPassword"
     private static let userUIDKey = "savedUserUID"
@@ -35,4 +38,6 @@ struct UserPersistence {
         UserDefaults.standard.removeObject(forKey: userEmailKey)
         UserDefaults.standard.removeObject(forKey: userPasswordKey)
     }
+    
+    @Published var isLoggedIn: Bool = false
 }

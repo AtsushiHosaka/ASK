@@ -14,7 +14,7 @@ struct MessageRow: View {
     var repliedMessage: Message?
     
     var isMyMessage: Bool {
-        return message.sentBy == UserPersistence.loadUserUID()
+        return message.sentBy == LoginManager.loadUserUID()
     }
     
     var body: some View {

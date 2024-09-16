@@ -44,7 +44,7 @@ class FirestoreAPI {
     }
     
     static func fetchQuestions() async throws -> [Question] {
-        guard let userId = UserPersistence.loadUserUID() else {
+        guard let userId = LoginManager.loadUserUID() else {
             return []
         }
         

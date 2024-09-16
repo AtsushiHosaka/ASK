@@ -10,15 +10,15 @@ import FirebaseAuth
 
 struct QuestionList: View {
     @EnvironmentObject var modelData: ModelData
-    @State private var initialLoaded = false  // 新しい変数を追加して初回ロードを確認
-    @Binding var isLoggedIn: Bool  // ログイン状態をバインディング
+    @ObservedObject var loginManager = LoginManager.shared
     
+    @State private var initialLoaded = false
     @State private var showingAlert = false
     
     var body: some View {
         NavigationSplitView {
-            if modelData.isLoading && !initialLoaded {  // 初回ロード時にのみ表示
-                ProgressView("Loading...")  // ローディング中に表示
+            if modelData.isLoading && !initialLoaded {
+                ProgressView("Loading...")
             } else {
                 List {
                     ForEach(modelData.questions) { question in
@@ -62,7 +62,7 @@ struct QuestionList: View {
                                 if modelData.questions.isEmpty {
                                     modelData.addQuestionsListener()
                                     await modelData.loadQuestions()
-                                    initialLoaded = true  // 初回ロード完了を設定
+                                    initialLoaded = true
                                 }
                             }
                         }
@@ -83,7 +83,7 @@ struct QuestionList: View {
     }
     
     private func addQuestion() {
-        guard let userId = UserPersistence.loadUserUID() else { return }
+        guard let userId = LoginManager.loadUserUID() else { return }
         
         Task {
             let title = "わからない"
@@ -96,8 +96,8 @@ struct QuestionList: View {
     private func logout() {
         do {
             try Auth.auth().signOut()
-            UserPersistence.clearUser()
-            isLoggedIn = false  // ログアウト後にログイン画面を表示
+            LoginManager.clearUser()
+            loginManager.isLoggedIn = false
         } catch {
             print("Error signing out: \(error.localizedDescription)")
         }

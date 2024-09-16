@@ -9,10 +9,8 @@ import SwiftUI
 import FirebaseAuth
 
 struct LoginView: View {
-    @Binding var isLoggedIn: Bool
-    @State private var email = ""
-    @State private var password = ""
-    @State private var errorMessage: String?
+    @ObservedObject var loginManager = LoginManager.shared
+    @ObservedObject var viewModel = LoginViewModel()
     
     var body: some View {
         NavigationStack {
@@ -27,26 +25,26 @@ struct LoginView: View {
                 
                 Spacer()
                 
-                AuthTextField(title: "メールアドレス", text: $email)
+                AuthTextField(title: "メールアドレス", text: $viewModel.email)
                 
-                AuthSecureField(title: "パスワード", text: $password)
+                AuthSecureField(title: "パスワード", text: $viewModel.password)
                 
                 Button {
-                    loginWithEmail()
+                    viewModel.loginWithEmail()
                 } label: {
                     AuthButton(icon: "envelope", text: "ログイン")
                         .frame(maxWidth: 300)
                 }
                 .buttonStyle(ClearBackgroundButtonStyle())
                 
-                if let errorMessage = errorMessage {
+                if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
                         .padding()
                 }
                 
                 NavigationLink {
-                    SignupView(isLoggedIn: $isLoggedIn)
+                    SignupView()
                 } label: {
                     AuthButton(icon: "envelope", text: "登録")
                         .frame(maxWidth: 300)
@@ -60,20 +58,4 @@ struct LoginView: View {
         }
         .background(Color.clear)
     }
-    
-    func loginWithEmail() {
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
-            if let error = error {
-                self.errorMessage = error.localizedDescription
-            } else {
-                UserPersistence.saveUser(uid: result!.user.uid, email: email, password: password)
-                self.errorMessage = nil
-                self.isLoggedIn = true
-            }
-        }
-    }
-}
-
-#Preview {
-    LoginView(isLoggedIn: .constant(false))
 }

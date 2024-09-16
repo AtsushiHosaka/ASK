@@ -11,7 +11,8 @@ import FirebaseStorage
 import FirebaseFirestore
 
 struct SignupView: View {
-    @Binding var isLoggedIn: Bool
+    @ObservedObject var loginManager = LoginManager.shared
+    
     @State private var name = ""
     @State private var email = ""
     @State private var password = ""
@@ -120,15 +121,11 @@ struct SignupView: View {
                 await FirestoreAPI.saveUserToFirestore(uid: uid, name: name, imageName: nil)
             }
             
-            UserPersistence.saveUser(uid: uid, email: email, password: password)
+            LoginManager.saveUser(uid: uid, email: email, password: password)
             
-            self.isLoggedIn = true
+            self.loginManager.isLoggedIn = true
         } catch {
             self.errorMessage = error.localizedDescription
         }
     }
-}
-
-#Preview {
-    SignupView(isLoggedIn: .constant(false))
 }

@@ -24,7 +24,7 @@ class ModelData: ObservableObject {
     }
     
     func addQuestionsListener() {
-        guard let userId = UserPersistence.loadUserUID() else { return }
+        guard let userId = LoginManager.loadUserUID() else { return }
         self.isLoading = true
         
         listener = Firestore.firestore().collection("questions")
@@ -133,7 +133,7 @@ class ModelData: ObservableObject {
         }
         
         do {
-            guard let userId = UserPersistence.loadUserUID() else { return }
+            guard let userId = LoginManager.loadUserUID() else { return }
             let fetchedUsers = try await FirestoreAPI.fetchUsersByIds(ids: [userId])
             
             DispatchQueue.main.async {
