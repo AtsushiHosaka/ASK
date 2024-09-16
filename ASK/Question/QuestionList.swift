@@ -11,13 +11,13 @@ import FirebaseAuth
 struct QuestionList: View {
     @ObservedObject var dataManager = DataManager.shared
     @ObservedObject var loginManager = LoginManager.shared
+    @ObservedObject var viewModel = QuestionListModel()
     
-    @State private var initialLoaded = false
     @State private var showingAlert = false
     
     var body: some View {
         NavigationSplitView {
-            if dataManager.isLoading && !initialLoaded {
+            if dataManager.isLoading && !viewModel.initialLoaded {
                 ProgressView("Loading...")
             } else {
                 List {
@@ -49,7 +49,7 @@ struct QuestionList: View {
                                 Alert(
                                     title: Text("ログアウトしますか？"),
                                     primaryButton: .destructive(Text("ログアウト")) {
-                                        logout()
+                                        loginManager.logout()
                                     },
                                     secondaryButton: .cancel()
                                 )
@@ -57,12 +57,12 @@ struct QuestionList: View {
                         }
                     }
                     .onAppear {
-                        if !initialLoaded {
+                        if !viewModel.initialLoaded {
                             Task {
                                 if dataManager.questions.isEmpty {
                                     dataManager.addQuestionsListener()
                                     await dataManager.loadQuestions()
-                                    initialLoaded = true
+                                    viewModel.initialLoaded = true
                                 }
                             }
                         }
@@ -79,27 +79,6 @@ struct QuestionList: View {
                     .foregroundStyle(.white)
             }
             .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 8, x: 0, y: 0)
-        }
-    }
-    
-    private func addQuestion() {
-        guard let userId = LoginManager.loadUserUID() else { return }
-        
-        Task {
-            let title = "わからない"
-            let newQuestion = Question(title: title, createDate: Date(), memberID: [userId], messages: [Message(date: Date(), content: "\(title)を開始しました", sentBy: userId)])
-            await dataManager.addQuestion(newQuestion)
-            await dataManager.loadQuestions()
-        }
-    }
-    
-    private func logout() {
-        do {
-            try Auth.auth().signOut()
-            LoginManager.clearUser()
-            loginManager.isLoggedIn = false
-        } catch {
-            print("Error signing out: \(error.localizedDescription)")
         }
     }
 }

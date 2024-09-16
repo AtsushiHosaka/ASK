@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import FirebaseAuth
 
 class LoginManager: ObservableObject {
     static var shared = LoginManager()
@@ -40,4 +41,16 @@ class LoginManager: ObservableObject {
     }
     
     @Published var isLoggedIn: Bool = false
+    
+    @ObservedObject var loginManager = LoginManager.shared
+    
+    func logout() {
+        do {
+            try Auth.auth().signOut()
+            LoginManager.clearUser()
+            self.isLoggedIn = false
+        } catch {
+            print("Error signing out: \(error.localizedDescription)")
+        }
+    }
 }
