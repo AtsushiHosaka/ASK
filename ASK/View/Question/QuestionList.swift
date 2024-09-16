@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct QuestionList: View {
-    @EnvironmentObject var modelData: ModelData
+    @ObservedObject var dataManager = DataManager.shared
     @ObservedObject var loginManager = LoginManager.shared
     
     @State private var initialLoaded = false
@@ -17,11 +17,11 @@ struct QuestionList: View {
     
     var body: some View {
         NavigationSplitView {
-            if modelData.isLoading && !initialLoaded {
+            if dataManager.isLoading && !initialLoaded {
                 ProgressView("Loading...")
             } else {
                 List {
-                    ForEach(modelData.questions) { question in
+                    ForEach(dataManager.questions) { question in
                         if let _ = question.id {
                             NavigationLink {
                                 ChatView(question: question)
@@ -59,9 +59,9 @@ struct QuestionList: View {
                     .onAppear {
                         if !initialLoaded {
                             Task {
-                                if modelData.questions.isEmpty {
-                                    modelData.addQuestionsListener()
-                                    await modelData.loadQuestions()
+                                if dataManager.questions.isEmpty {
+                                    dataManager.addQuestionsListener()
+                                    await dataManager.loadQuestions()
                                     initialLoaded = true
                                 }
                             }
@@ -88,8 +88,8 @@ struct QuestionList: View {
         Task {
             let title = "わからない"
             let newQuestion = Question(title: title, createDate: Date(), memberID: [userId], messages: [Message(date: Date(), content: "\(title)を開始しました", sentBy: userId)])
-            await modelData.addQuestion(newQuestion)
-            await modelData.loadQuestions()
+            await dataManager.addQuestion(newQuestion)
+            await dataManager.loadQuestions()
         }
     }
     

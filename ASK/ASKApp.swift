@@ -14,12 +14,9 @@ struct ASKApp: App {
         FirebaseApp.configure()
     }
 
-    @StateObject private var modelData = ModelData()
-
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(modelData)
         }
         .windowStyle(HiddenTitleBarWindowStyle())
     }

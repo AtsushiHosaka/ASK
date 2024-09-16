@@ -11,6 +11,21 @@ import FirebaseAuth
 class FirestoreAPI {
     static private let db = Firestore.firestore()
     
+    static func fetchUsers(for query: String) async throws -> [User] {
+        let snapshot = try await db.collection("users")
+            .whereField("name", isGreaterThanOrEqualTo: query)
+            .whereField("name", isLessThanOrEqualTo: query + "\u{f8ff}")
+            .getDocuments()
+        
+        var users = try snapshot.documents.compactMap { try $0.data(as: User.self) }
+        
+        for index in users.indices {
+            users[index].imageData = await FirebaseStorageAPI.fetchImageData(from: users[index].imageName)
+        }
+        
+        return users
+    }
+    
     static func fetchUsersByIds(ids: [String]) async throws -> [User] {
         var users: [User] = []
         
@@ -40,6 +55,17 @@ class FirestoreAPI {
             try db.collection("users").document(uid).setData(from: user)
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    static func addUserToQuestion(questionId: String, user: User) async throws {
+        let document = db.collection("questions").document(questionId)
+        do {
+            try await document.updateData([
+                "memberID": FieldValue.arrayUnion([user.id!])
+            ])
+        } catch {
+            throw error
         }
     }
     

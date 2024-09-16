@@ -1,5 +1,5 @@
 //
-//  ModelData.swift
+//  DataManager.swift
 //  ASK
 //
 //  Created by 保坂篤志 on 2024/09/14.
@@ -10,7 +10,9 @@ import Combine
 import FirebaseFirestore
 import FirebaseAuth
 
-class ModelData: ObservableObject {
+class DataManager: ObservableObject {
+    static var shared = DataManager()
+    
     @Published var users: [User] = []
     @Published var questions: [Question] = []
     @Published var isLoading = false

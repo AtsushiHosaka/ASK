@@ -9,7 +9,8 @@ import SwiftUI
 import AppKit
 
 struct ChatView: View {
-    @EnvironmentObject var modelData: ModelData
+    @ObservedObject var dataManager = DataManager.shared
+    
     @State private var showAddMemberView: Bool = false
     var question: Question
     @State private var newMessageContent: String = ""
@@ -28,6 +29,14 @@ struct ChatView: View {
     
     var body: some View {
         HStack {
+            if showAddMemberView {
+                AddMemberView(question: question)
+                    .frame(width: 300)
+                    .transition(.move(edge: .leading))
+                    .padding()
+                    .background(.white.opacity(0.3))
+            }
+            
             VStack(alignment: .leading) {
                 messageList
                 
@@ -69,14 +78,6 @@ struct ChatView: View {
                 .padding()
                 .background(.white.opacity(0.3))
             }
-            
-            if showAddMemberView {
-                AddMemberView(question: question)
-                    .frame(width: 300)
-                    .transition(.move(edge: .trailing))
-                    .padding()
-                    .background(.white.opacity(0.3))
-            }
         }
         .toolbar {
             ToolbarItem {
@@ -92,7 +93,7 @@ struct ChatView: View {
         }
         .onAppear {
             if let id = question.id {
-                modelData.addMessagesListener(for: id)
+                dataManager.addMessagesListener(for: id)
             }
         }
     }
@@ -313,9 +314,4 @@ struct ChatView: View {
         }
         return message
     }
-}
-
-#Preview {
-    ChatView(question: Question(title: "テスト", createDate: Date(), memberID: ["as", "atsushi"], messages: []))
-        .environmentObject(ModelData())
 }
