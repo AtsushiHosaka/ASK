@@ -98,6 +98,7 @@
 		6DE7A3502C979D76003ADD5E /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A34F2C979D75003ADD5E /* SignupView.swift */; };
 		6DE7A3522C97A66D003ADD5E /* FirebaseStorageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A3512C97A66D003ADD5E /* FirebaseStorageAPI.swift */; };
 		6DE7A3552C97AB48003ADD5E /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A3542C97AB48003ADD5E /* LoginViewModel.swift */; };
+		6DE7A35A2C97B2B8003ADD5E /* SignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A3592C97B2B8003ADD5E /* SignupViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -140,6 +141,7 @@
 		6DE7A34F2C979D75003ADD5E /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		6DE7A3512C97A66D003ADD5E /* FirebaseStorageAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageAPI.swift; sourceTree = "<group>"; };
 		6DE7A3542C97AB48003ADD5E /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		6DE7A3592C97B2B8003ADD5E /* SignupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,9 +234,11 @@
 			isa = PBXGroup;
 			children = (
 				6DBDD33D2C949C1D00BB959B /* ASKApp.swift */,
+				6DBDD5422C952DF000BB959B /* ContentView.swift */,
 				6DE7A3582C97ACE2003ADD5E /* Manager */,
 				6DE7A3532C97AB0E003ADD5E /* API */,
 				6DBDD3502C94A0B100BB959B /* Model */,
+				6DBDD5762C95583800BB959B /* Login */,
 				6DBDD3552C94A32500BB959B /* View */,
 				6DBDD3432C949C1E00BB959B /* Assets.xcassets */,
 				6DBDD3482C949C1E00BB959B /* ASK.entitlements */,
@@ -266,8 +270,6 @@
 		6DBDD3552C94A32500BB959B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6DBDD5422C952DF000BB959B /* ContentView.swift */,
-				6DBDD5762C95583800BB959B /* Login */,
 				6DBDD54A2C95358F00BB959B /* Question */,
 				6DBDD54B2C9535B200BB959B /* Message */,
 			);
@@ -323,6 +325,7 @@
 				6DBDD54C2C954BB900BB959B /* LoginView.swift */,
 				6DE7A3542C97AB48003ADD5E /* LoginViewModel.swift */,
 				6DE7A34F2C979D75003ADD5E /* SignupView.swift */,
+				6DE7A3592C97B2B8003ADD5E /* SignupViewModel.swift */,
 				6DE7A33C2C978068003ADD5E /* AuthHelper */,
 			);
 			path = Login;
@@ -546,6 +549,7 @@
 				6DBDD5432C952DF000BB959B /* ContentView.swift in Sources */,
 				6DE7A3552C97AB48003ADD5E /* LoginViewModel.swift in Sources */,
 				6DBDD59D2C96D65900BB959B /* MessageRow.swift in Sources */,
+				6DE7A35A2C97B2B8003ADD5E /* SignupViewModel.swift in Sources */,
 				6DE7A3502C979D76003ADD5E /* SignupView.swift in Sources */,
 				6DBDD3542C94A2B800BB959B /* Message.swift in Sources */,
 				6DBDD34F2C949FA600BB959B /* User.swift in Sources */,
