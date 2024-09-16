@@ -19,26 +19,10 @@ class AppDelete: NSObject, UIApplicationDelegate {
 @main
 struct ASK_iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelete.self) var delegate
-    @StateObject private var modelData = ModelData()
     
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     var body: some Scene {
         WindowGroup {
-            MessageView()
-                .environmentObject(modelData)
+            ContentView()
         }
-//        .modelContainer(sharedModelContainer)
     }
 }
