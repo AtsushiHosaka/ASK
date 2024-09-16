@@ -26,7 +26,6 @@ class FirebaseStorageAPI {
     static func uploadImage(uid: String, imageData: Data) async throws -> String {
         let storageRef = storage.child("\(uid).jpg")
         let _ = try await storageRef.putDataAsync(imageData)
-        let downloadURL = try await storageRef.downloadURL()
         return "\(uid).jpg"
     }
 }

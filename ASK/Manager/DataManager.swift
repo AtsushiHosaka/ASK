@@ -61,8 +61,10 @@ class DataManager: ObservableObject {
                             self.addMessagesListener(for: questions[index].id ?? "")
                         }
                         
+                        let newQuestions = questions
+                        
                         DispatchQueue.main.async {
-                            self.questions = questions
+                            self.questions = newQuestions
                             self.isLoading = false
                         }
                     } catch {
