@@ -35,7 +35,7 @@ struct QuestionList: View {
                 
                     .toolbar {
                         ToolbarItem {
-                            Button(action: addQuestion) {
+                            Button(action: viewModel.addQuestion) {
                                 Label("Add Item", systemImage: "plus")
                             }
                         }

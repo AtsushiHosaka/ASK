@@ -137,7 +137,7 @@ class DataManager: ObservableObject {
         }
         
         do {
-            guard let userId = LoginManager.loadUserUID() else { return }
+            guard let userId = await LoginManager.loadUserUID() else { return }
             let fetchedUsers = try await FirestoreAPI.fetchUsersByIds(ids: [userId])
             
             DispatchQueue.main.async {

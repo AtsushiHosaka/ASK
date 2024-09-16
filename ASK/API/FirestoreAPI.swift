@@ -70,7 +70,7 @@ class FirestoreAPI {
     }
     
     static func fetchQuestions() async throws -> [Question] {
-        guard let userId = LoginManager.loadUserUID() else {
+        guard let userId = await LoginManager.loadUserUID() else {
             return []
         }
         
