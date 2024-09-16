@@ -41,25 +41,3 @@ struct CodeView: View {
         .padding()
     }
 }
-
-#Preview {
-    CodeView(
-        fileName: "Content.swift",
-        code:  """
-        import SwiftUI
-        
-        struct ContentView: View {
-            let a = 12345
-            
-            var body: some View {
-                VStack {
-                    Image(systemName: "globe")
-                        .imageScale(.large)
-                        .foregroundColor(.accentColor)
-                    Text("Hello, world!")
-                }
-            }
-        }
-        """
-    )
-}

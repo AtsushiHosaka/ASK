@@ -10,18 +10,14 @@ import AppKit
 
 struct ChatView: View {
     @ObservedObject var dataManager = DataManager.shared
+    @ObservedObject var viewModel = ChatViewModel()
+    
+    var question: Question
     
     @State private var showAddMemberView: Bool = false
-    var question: Question
-    @State private var newMessageContent: String = ""
-    @State private var textHeight: CGFloat = 30
-    @State private var fileName: String = ""
-    @State private var code: String = ""
-    @State private var scrollToMessageID: String? = nil
-    @State private var replyMessage: Message? = nil
     @State private var showCodeDiff: Bool = false
-    @State private var codeDiffBefore: String = ""
-    @State private var codeDiffAfter: String = ""
+    @State private var textHeight: CGFloat = 30
+    @State private var scrollToMessageID: String? = nil
     
     var messages: [Message] {
         question.messages ?? []
@@ -43,9 +39,9 @@ struct ChatView: View {
                 Spacer()
                 
                 VStack {
-                    if let replyMessage {
+                    if let message = viewModel.replyMessage {
                         HStack {
-                            Button(action: removeReply) {
+                            Button(action: viewModel.removeReply) {
                                 Image(systemName: "multiply")
                                     .foregroundStyle(.indigo)
                                     .fontWeight(.bold)
@@ -54,7 +50,7 @@ struct ChatView: View {
                             
                             Spacer()
                             
-                            Text("返信：\(replyMessage.content.prefix(30))...")
+                            Text("返信：\(message.content.prefix(30))...")
                                 .foregroundStyle(.secondary)
                                 .fontWeight(.bold)
                         }
@@ -67,8 +63,8 @@ struct ChatView: View {
                     }
                     
                     VStack {
-                        if !code.isEmpty {
-                            CodeView(fileName: fileName, code: code)
+                        if !viewModel.code.isEmpty {
+                            CodeView(fileName: viewModel.fileName, code: viewModel.code)
                         }
                         
                         bottomEditorView
@@ -103,7 +99,7 @@ struct ChatView: View {
             List(messages) { message in
                 VStack {
                     if let replyTo = message.replyTo,
-                       let repliedMessage = getRepliedMessage(id: replyTo) {
+                       let repliedMessage = viewModel.getRepliedMessage(messages: messages, id: replyTo) {
                         ReplyRow(message: message)
                             .listRowSeparator(.hidden)
                             .onTapGesture {
@@ -117,7 +113,7 @@ struct ChatView: View {
                         .id(message.id)
                         .contextMenu {
                             Button {
-                                replyTo(message)
+                                viewModel.replyTo(message)
                             } label: {
                                 Text("返信する")
                             }
@@ -132,7 +128,7 @@ struct ChatView: View {
     
     var codeDiffEditor: some View {
         HStack {
-            TextEditor(text: $codeDiffBefore)
+            TextEditor(text: $viewModel.codeDiffBefore)
                 .scrollContentBackground(.hidden)
                 .font(.system(size: 14))
                 .padding()
@@ -144,7 +140,7 @@ struct ChatView: View {
             
             Image(systemName: "arrow.forward")
             
-            TextEditor(text: $codeDiffAfter)
+            TextEditor(text: $viewModel.codeDiffAfter)
                 .scrollContentBackground(.hidden)
                 .font(.system(size: 14))
                 .padding()
@@ -165,7 +161,7 @@ struct ChatView: View {
     
     var bottomEditorView: some View {
         HStack(spacing: 30) {
-            TextEditor(text: $newMessageContent)
+            TextEditor(text: $viewModel.newMessageContent)
                 .scrollContentBackground(.hidden)
                 .font(.system(size: 14))
                 .frame(height: max(30, textHeight))
@@ -177,7 +173,7 @@ struct ChatView: View {
                             .onAppear {
                                 calculateHeight(geometry: geometry)
                             }
-                            .onChange(of: newMessageContent) {
+                            .onChange(of: viewModel.newMessageContent) {
                                 calculateHeight(geometry: geometry)
                             }
                     }
@@ -204,7 +200,7 @@ struct ChatView: View {
             
             
             Button {
-                selectSwiftFile()
+                viewModel.selectSwiftFile()
             } label: {
                 Image(systemName: "square.and.arrow.up")
                     .foregroundColor(.indigo)
@@ -220,8 +216,9 @@ struct ChatView: View {
             .buttonStyle(ClearBackgroundButtonStyle())
             
             Button {
-                if !newMessageContent.isEmpty {
-                    newMessage()
+                if !viewModel.newMessageContent.isEmpty {
+                    viewModel.newMessage(question: question)
+                    showCodeDiff = false
                 }
             } label: {
                 Image(systemName: "paperplane.fill")
@@ -240,78 +237,14 @@ struct ChatView: View {
         }
     }
     
-    private func newMessage() {
-        var newMessage = Message(date: Date(), content: newMessageContent, sentBy: LoginManager.loadUserUID()!)
-        
-        if !code.isEmpty {
-            newMessage.fileName = fileName
-            newMessage.code = code
-        }
-        
-        if !codeDiffBefore.isEmpty, !codeDiffAfter.isEmpty {
-            newMessage.codeDiffBefore = codeDiffBefore
-            newMessage.codeDiffAfter = codeDiffAfter
-        }
-        
-        if let replyMessage {
-            newMessage.replyTo = replyMessage.id
-        }
-        
-        Task {
-            try await FirestoreAPI.addMessageToFirestore(question: question, message: newMessage)
-        }
-        newMessageContent = ""
-        fileName = ""
-        code = ""
-        replyMessage = nil
-        showCodeDiff = false
-        codeDiffBefore = ""
-        codeDiffAfter = ""
-    }
-    
-    private func replyTo(_ message: Message) {
-        replyMessage = message
-        codeDiffBefore = message.code ?? ""
-    }
-    
-    private func removeReply() {
-        replyMessage = nil
-    }
-    
     private func calculateHeight(geometry: GeometryProxy) {
         let width = geometry.size.width
         let size = CGSize(width: width, height: .infinity)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: NSFont.systemFont(ofSize: 14)
         ]
-        let attributedText = NSAttributedString(string: newMessageContent, attributes: attributes)
+        let attributedText = NSAttributedString(string: viewModel.newMessageContent, attributes: attributes)
         let boundingRect = attributedText.boundingRect(with: size, options: .usesLineFragmentOrigin, context: nil)
         textHeight = min(boundingRect.height * 0.95, 150)
-    }
-    
-    private func selectSwiftFile() {
-        let panel = NSOpenPanel()
-        panel.allowedContentTypes = [.swiftSource]
-        panel.allowsMultipleSelection = false
-        panel.canChooseDirectories = false
-        
-        if panel.runModal() == .OK {
-            if let url = panel.url {
-                do {
-                    let fileContents = try String(contentsOf: url, encoding: .utf8)
-                    code = fileContents
-                    fileName = url.lastPathComponent
-                } catch {
-                    print("ファイルの読み込みに失敗しました: \(error)")
-                }
-            }
-        }
-    }
-    
-    private func getRepliedMessage(id: String) -> Message? {
-        guard let message = messages.first(where: { $0.id == id }) else {
-            return nil
-        }
-        return message
     }
 }

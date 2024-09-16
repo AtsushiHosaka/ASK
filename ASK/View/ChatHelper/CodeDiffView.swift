@@ -98,17 +98,3 @@ struct CodeDiffView: View {
         }
     }
 }
-
-#Preview {
-    let oldText = """
-    let a = 100
-    let b = 10
-    """
-    
-    let newText = """
-    let a = 100
-    let c = 1
-    """
-    
-    return CodeDiffView(codeDiffBefore: oldText, codeDiffAfter: newText)
-}
