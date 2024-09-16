@@ -10,6 +10,7 @@ import FirebaseAuth
 
 struct ContentView: View {
     @ObservedObject var loginManager = LoginManager.shared
+    @ObservedObject var viewModel = ContentViewModel()
 
     var body: some View {
         ZStack {
@@ -22,29 +23,13 @@ struct ContentView: View {
             } else {
                 LoginView()
                     .onAppear {
-                        checkIfLoggedIn()
+                        viewModel.checkIfLoggedIn()
                     }
             }
         }
     }
     
-    private func checkIfLoggedIn() {
-        if let email = LoginManager.loadUserEmail(),
-           let password = LoginManager.loadUserPassword() {
-            
-            loginWithEmail(email: email, password: password)
-        }
-    }
     
-    func loginWithEmail(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                self.loginManager.isLoggedIn = true
-            }
-        }
-    }
 }
 
 #Preview {
