@@ -16,7 +16,37 @@ struct NewQuestionView: View {
     @State private var selectedCode: String = ""
     @State private var errorContent: String = ""
     @State private var errorMessage: String = ""
+    @State private var selectedMacOSVersion = ""
+    @State private var selectediOSVersion = ""
+    @State private var selectedEditor = ""
+    @State private var selectedEditorVersion = ""
+    
     @State private var emptyMessage: String = ""
+    
+    // macOSバージョンの選択肢（最新: macOS 15.0）
+    let macOSVersions = [
+        "macOS 15.0", "macOS 14.1", "macOS 14.0",
+        "macOS 13.4", "macOS 13.3", "macOS 13.2", "macOS 13.1", "macOS 13.0",
+        "macOS 12.4", "macOS 12.3", "macOS 12.2", "macOS 12.1", "macOS 12.0"
+    ]
+
+    // iOSバージョンの選択肢（最新: iOS 18.0）
+    let iOSVersions = [
+        "iOS 18.0", "iOS 17.1", "iOS 17.0",
+        "iOS 16.4", "iOS 16.3", "iOS 16.2", "iOS 16.1", "iOS 16.0",
+        "iOS 15.5", "iOS 15.4", "iOS 15.3", "iOS 15.2", "iOS 15.1", "iOS 15.0"
+    ]
+
+    // エディターの選択肢
+    let editors = ["Xcode", "VSCode", "AppCode"]
+
+    // エディターバージョンの選択肢
+    let editorVersions = [
+        "Xcode 15.1", "Xcode 15.0",
+        "Xcode 14.3", "Xcode 14.2", "Xcode 14.1", "Xcode 14.0",
+        "VSCode 1.82", "VSCode 1.81", "VSCode 1.80",
+        "AppCode 2023.2", "AppCode 2023.1"
+    ]
     
     var body: some View {
         VStack(spacing: 20) {
@@ -43,11 +73,48 @@ struct NewQuestionView: View {
             
             NewQuestionTextField(title: "エラー文章", text: $errorMessage)
             
+            // macOSバージョンのセレクター
+            Picker("macOS バージョン", selection: $selectedMacOSVersion) {
+                ForEach(macOSVersions, id: \.self) { version in
+                    Text(version).tag(version)
+                }
+            }
+            .pickerStyle(MenuPickerStyle()) // ドロップダウンメニューとして表示
+            .frame(maxWidth: 300)
+            
+            // iOSバージョンのセレクター
+            Picker("iOS バージョン", selection: $selectediOSVersion) {
+                ForEach(iOSVersions, id: \.self) { version in
+                    Text(version).tag(version)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+            .frame(maxWidth: 300)
+            
+            // エディターのセレクター
+            Picker("エディター", selection: $selectedEditor) {
+                ForEach(editors, id: \.self) { editor in
+                    Text(editor).tag(editor)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+            .frame(maxWidth: 300)
+            
+            // エディターバージョンのセレクター
+            Picker("エディターバージョン", selection: $selectedEditorVersion) {
+                ForEach(editorVersions, id: \.self) { version in
+                    Text(version).tag(version)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+            .frame(maxWidth: 300)
+            
+            
             if !emptyMessage.isEmpty {
                 Text(emptyMessage)
                     .foregroundStyle(.red)
             }
-
+            
             Button(action: {
                 if errorContent.isEmpty {
                     emptyMessage = "エラー内容を入力してください"
@@ -104,6 +171,26 @@ struct NewQuestionView: View {
         
         if !errorMessage.isEmpty {
             let message = Message(date: Date(), content: errorMessage, sentBy: userId)
+            messages.append(message)
+        }
+        
+        if !selectedMacOSVersion.isEmpty {
+            let message = Message(date: Date(), content: "macOSのバージョンは\(selectedMacOSVersion)です", sentBy: userId)
+            messages.append(message)
+        }
+        
+        if !selectediOSVersion.isEmpty {
+            let message = Message(date: Date(), content: "iOSのバージョンは\(selectediOSVersion)です", sentBy: userId)
+            messages.append(message)
+        }
+        
+        if !selectedEditor.isEmpty {
+            let message = Message(date: Date(), content: "エディタは\(selectedEditor)です", sentBy: userId)
+            messages.append(message)
+        }
+        
+        if !selectedEditorVersion.isEmpty {
+            let message = Message(date: Date(), content: "エディタのバージョンは\(selectedEditorVersion)です", sentBy: userId)
             messages.append(message)
         }
         
