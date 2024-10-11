@@ -29,14 +29,6 @@ struct ChatView: View {
                 .ignoresSafeArea(.all)
             
             HStack {
-                if showAddMemberView {
-                    AddMemberView(question: question)
-                        .frame(width: 300)
-                        .transition(.move(edge: .leading))
-                        .padding()
-                        .background(.white.opacity(0.3))
-                }
-                
                 VStack(alignment: .leading) {
                     messageList
                     
@@ -77,6 +69,14 @@ struct ChatView: View {
                     }
                     .padding()
                     .background(.white.opacity(0.3))
+                }
+                
+                if showAddMemberView {
+                    AddMemberView(question: question)
+                        .frame(width: 300)
+                        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .trailing)))
+                        .padding()
+                        .background(.white.opacity(0.3))
                 }
             }
             .toolbar {
