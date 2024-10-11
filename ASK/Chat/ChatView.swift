@@ -24,72 +24,77 @@ struct ChatView: View {
     }
     
     var body: some View {
-        HStack {
-            if showAddMemberView {
-                AddMemberView(question: question)
-                    .frame(width: 300)
-                    .transition(.move(edge: .leading))
-                    .padding()
-                    .background(.white.opacity(0.3))
-            }
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.white, .blue.opacity(0.2), .white, .purple.opacity(0.2), .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea(.all)
             
-            VStack(alignment: .leading) {
-                messageList
+            HStack {
+                if showAddMemberView {
+                    AddMemberView(question: question)
+                        .frame(width: 300)
+                        .transition(.move(edge: .leading))
+                        .padding()
+                        .background(.white.opacity(0.3))
+                }
                 
-                Spacer()
-                
-                VStack {
-                    if let message = viewModel.replyMessage {
-                        HStack {
-                            Button(action: viewModel.removeReply) {
-                                Image(systemName: "multiply")
-                                    .foregroundStyle(.indigo)
-                                    .fontWeight(.bold)
-                            }
-                            .buttonStyle(ClearBackgroundButtonStyle())
-                            
-                            Spacer()
-                            
-                            Text("返信：\(message.content.prefix(30))...")
-                                .foregroundStyle(.secondary)
-                                .fontWeight(.bold)
-                        }
-                    }
+                VStack(alignment: .leading) {
+                    messageList
                     
-                    if showCodeDiff {
-                        codeDiffEditor
-                            .frame(height: 200)
-                            .padding()
-                    }
+                    Spacer()
                     
                     VStack {
-                        if !viewModel.code.isEmpty {
-                            CodeView(fileName: viewModel.fileName, code: viewModel.code)
+                        if let message = viewModel.replyMessage {
+                            HStack {
+                                Button(action: viewModel.removeReply) {
+                                    Image(systemName: "multiply")
+                                        .foregroundStyle(.indigo)
+                                        .fontWeight(.bold)
+                                }
+                                .buttonStyle(ClearBackgroundButtonStyle())
+                                
+                                Spacer()
+                                
+                                Text("返信：\(message.content.prefix(30))...")
+                                    .foregroundStyle(.secondary)
+                                    .fontWeight(.bold)
+                            }
                         }
                         
-                        bottomEditorView
-                            .padding()
+                        if showCodeDiff {
+                            codeDiffEditor
+                                .frame(height: 200)
+                                .padding()
+                        }
+                        
+                        VStack {
+                            if !viewModel.code.isEmpty {
+                                CodeView(fileName: viewModel.fileName, code: viewModel.code)
+                            }
+                            
+                            bottomEditorView
+                                .padding()
+                        }
+                    }
+                    .padding()
+                    .background(.white.opacity(0.3))
+                }
+            }
+            .toolbar {
+                ToolbarItem {
+                    Button(action: {
+                        withAnimation {
+                            showAddMemberView.toggle()
+                        }
+                    }) {
+                        Image(systemName: "person.fill.badge.plus")
+                            .imageScale(.large)
                     }
                 }
-                .padding()
-                .background(.white.opacity(0.3))
             }
-        }
-        .toolbar {
-            ToolbarItem {
-                Button(action: {
-                    withAnimation {
-                        showAddMemberView.toggle()
-                    }
-                }) {
-                    Image(systemName: "person.fill.badge.plus")
-                        .imageScale(.large)
+            .onAppear {
+                if let id = question.id {
+                    dataManager.addMessagesListener(for: id)
                 }
-            }
-        }
-        .onAppear {
-            if let id = question.id {
-                dataManager.addMessagesListener(for: id)
             }
         }
     }

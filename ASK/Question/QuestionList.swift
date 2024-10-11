@@ -17,56 +17,66 @@ struct QuestionList: View {
     
     var body: some View {
         NavigationSplitView {
-            if dataManager.isLoading && !initialLoaded {
-                ProgressView("Loading...")
-            } else {
-                List {
-                    ForEach(dataManager.questions) { question in
-                        if let _ = question.id {
-                            NavigationLink {
-                                ChatView(question: question)
-                            } label: {
-                                QuestionRow(question: question)
-                            }
-                        }
-                    }
-                }
-                Spacer()
+            ZStack {
+                #if os(iOS)
+                LinearGradient(gradient: Gradient(colors: [.white, .blue.opacity(0.2), .white, .purple.opacity(0.2), .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .ignoresSafeArea(.all)
+                #endif
                 
-                    .toolbar {
-                        ToolbarItem {
-                            Button(action: addQuestion) {
-                                Label("Add Item", systemImage: "plus")
-                            }
-                        }
-                        ToolbarItem {
-                            Button{
-                                showingAlert = true
-                            } label: {
-                                Label("logout", systemImage: "rectangle.portrait.and.arrow.right")
-                            }
-                            .alert(isPresented: $showingAlert) {
-                                Alert(
-                                    title: Text("ログアウトしますか？"),
-                                    primaryButton: .destructive(Text("ログアウト")) {
-                                        logout()
-                                    },
-                                    secondaryButton: .cancel()
-                                )
-                            }
-                        }
-                    }
-                    .onAppear {
-                        if !initialLoaded {
-                            Task {
-                                if dataManager.questions.isEmpty {
-                                    dataManager.addQuestionsListener()
-                                    await dataManager.loadQuestions()
-                                    initialLoaded = true
+                if dataManager.isLoading && !initialLoaded {
+                    ProgressView("Loading...")
+                } else {
+                    List {
+                        ForEach(dataManager.questions) { question in
+                            if let _ = question.id {
+                                NavigationLink {
+                                    ChatView(question: question)
+                                } label: {
+                                    QuestionRow(question: question)
                                 }
                             }
                         }
                     }
+                    .scrollContentBackground(.hidden)
+                    .background(Color.clear)
+                    
+                    Spacer()
+                    
+                        .toolbar {
+                            ToolbarItem {
+                                Button(action: addQuestion) {
+                                    Label("Add Item", systemImage: "plus")
+                                }
+                            }
+                            ToolbarItem {
+                                Button{
+                                    showingAlert = true
+                                } label: {
+                                    Label("logout", systemImage: "rectangle.portrait.and.arrow.right")
+                                }
+                                .alert(isPresented: $showingAlert) {
+                                    Alert(
+                                        title: Text("ログアウトしますか？"),
+                                        primaryButton: .destructive(Text("ログアウト")) {
+                                            logout()
+                                        },
+                                        secondaryButton: .cancel()
+                                    )
+                                }
+                            }
+                        }
+                        .onAppear {
+                            if !initialLoaded {
+                                Task {
+                                    if dataManager.questions.isEmpty {
+                                        dataManager.addQuestionsListener()
+                                        await dataManager.loadQuestions()
+                                        initialLoaded = true
+                                    }
+                                }
+                            }
+                        }
+                }
             }
         } detail: {
             VStack {
@@ -87,7 +97,7 @@ struct QuestionList: View {
         
         Task {
             let title = "わからない"
-            let newQuestion = Question(title: title, createDate: Date(), memberID: [userId], messages: [Message(date: Date(), content: "\(title)を開始しました", sentBy: userId)])
+            let newQuestion = Question(title: title, createDate: Date(), memberID: [userId], messages: [Message(date: Date(), content: "質問を開始しました", sentBy: userId)])
             await dataManager.addQuestion(newQuestion)
             await dataManager.loadQuestions()
         }
