@@ -44,7 +44,7 @@ struct QuestionList: View {
                     
                         .toolbar {
                             ToolbarItem {
-                                Button(action: addQuestion) {
+                                NavigationLink(destination: NewQuestionView()) {
                                     Label("Add Item", systemImage: "plus")
                                 }
                             }
@@ -89,17 +89,6 @@ struct QuestionList: View {
                     .foregroundStyle(.white)
             }
             .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 8, x: 0, y: 0)
-        }
-    }
-    
-    private func addQuestion() {
-        guard let userId = LoginManager.loadUserUID() else { return }
-        
-        Task {
-            let title = "わからない"
-            let newQuestion = Question(title: title, createDate: Date(), memberID: [userId], messages: [Message(date: Date(), content: "質問を開始しました", sentBy: userId)])
-            await dataManager.addQuestion(newQuestion)
-            await dataManager.loadQuestions()
         }
     }
     

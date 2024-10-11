@@ -13,14 +13,19 @@ struct ContentView: View {
     @ObservedObject var viewModel = ContentViewModel()
     
     var body: some View {
-        if loginManager.isLoggedIn {
-            QuestionList()
-                .frame(minWidth: 800, minHeight: 600)
-        } else {
-            LoginView()
-                .onAppear {
-                    viewModel.checkIfLoggedIn()
-                }
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.white, .blue.opacity(0.2), .white, .purple.opacity(0.2), .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea(.all)
+            
+            if loginManager.isLoggedIn {
+                QuestionList()
+                    .frame(minWidth: 800, minHeight: 600)
+            } else {
+                LoginView()
+                    .onAppear {
+                        viewModel.checkIfLoggedIn()
+                    }
+            }
         }
     }
     

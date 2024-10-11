@@ -127,6 +127,10 @@
 		6DE7A35C2C97B5C9003ADD5E /* AddMemberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A35B2C97B5C9003ADD5E /* AddMemberViewModel.swift */; };
 		6DE7A35E2C97D497003ADD5E /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A35D2C97D497003ADD5E /* ChatViewModel.swift */; };
 		6DE7A3602C97E47B003ADD5E /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE7A35F2C97E47B003ADD5E /* ContentViewModel.swift */; };
+		6DF4EB342CB97DEE003AD1EB /* NewQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EB332CB97DEE003AD1EB /* NewQuestionView.swift */; };
+		6DF4EB352CB97DEE003AD1EB /* NewQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EB332CB97DEE003AD1EB /* NewQuestionView.swift */; };
+		6DF4EB372CB97F04003AD1EB /* NewQuestionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EB362CB97F04003AD1EB /* NewQuestionButton.swift */; };
+		6DF4EB392CB97F4D003AD1EB /* NewQuestionTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EB382CB97F4D003AD1EB /* NewQuestionTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -176,6 +180,9 @@
 		6DE7A35B2C97B5C9003ADD5E /* AddMemberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewModel.swift; sourceTree = "<group>"; };
 		6DE7A35D2C97D497003ADD5E /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		6DE7A35F2C97E47B003ADD5E /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		6DF4EB332CB97DEE003AD1EB /* NewQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewQuestionView.swift; sourceTree = "<group>"; };
+		6DF4EB362CB97F04003AD1EB /* NewQuestionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewQuestionButton.swift; sourceTree = "<group>"; };
+		6DF4EB382CB97F4D003AD1EB /* NewQuestionTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewQuestionTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +316,7 @@
 			isa = PBXGroup;
 			children = (
 				6DE7A3472C978946003ADD5E /* UserIcon.swift */,
+				6DF4EB3A2CB97F53003AD1EB /* NewQuestionHelper */,
 				6DE7A34E2C979388003ADD5E /* EditorHelper */,
 				6DE7A34B2C978F88003ADD5E /* ChatHelper */,
 				6DE7A33C2C978068003ADD5E /* AuthHelper */,
@@ -345,6 +353,7 @@
 			children = (
 				6DBDD5462C952F6000BB959B /* QuestionList.swift */,
 				6DBDD5482C9534B200BB959B /* QuestionRow.swift */,
+				6DF4EB332CB97DEE003AD1EB /* NewQuestionView.swift */,
 			);
 			path = Question;
 			sourceTree = "<group>";
@@ -418,6 +427,15 @@
 				6DBDD4052C94B2E500BB959B /* DataManager.swift */,
 			);
 			path = Manager;
+			sourceTree = "<group>";
+		};
+		6DF4EB3A2CB97F53003AD1EB /* NewQuestionHelper */ = {
+			isa = PBXGroup;
+			children = (
+				6DF4EB362CB97F04003AD1EB /* NewQuestionButton.swift */,
+				6DF4EB382CB97F4D003AD1EB /* NewQuestionTextField.swift */,
+			);
+			path = NewQuestionHelper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -596,6 +614,7 @@
 				6DBDD59D2C96D65900BB959B /* MessageRow.swift in Sources */,
 				6DE7A35A2C97B2B8003ADD5E /* SignupViewModel.swift in Sources */,
 				6DE7A3502C979D76003ADD5E /* SignupView.swift in Sources */,
+				6DF4EB342CB97DEE003AD1EB /* NewQuestionView.swift in Sources */,
 				6DBDD3542C94A2B800BB959B /* Message.swift in Sources */,
 				6DBDD34F2C949FA600BB959B /* User.swift in Sources */,
 				6DE7A3442C978810003ADD5E /* MyMessageContent.swift in Sources */,
@@ -606,10 +625,12 @@
 				6DE7A3522C97A66D003ADD5E /* FirebaseStorageAPI.swift in Sources */,
 				6DBDD4062C94B2E500BB959B /* DataManager.swift in Sources */,
 				6DBDD54D2C954BB900BB959B /* LoginView.swift in Sources */,
+				6DF4EB392CB97F4D003AD1EB /* NewQuestionTextField.swift in Sources */,
 				6DBDD5472C952F6000BB959B /* QuestionList.swift in Sources */,
 				6DE7A3602C97E47B003ADD5E /* ContentViewModel.swift in Sources */,
 				6DE7A3332C970952003ADD5E /* ReplyRow.swift in Sources */,
 				6DE7A3462C9788D3003ADD5E /* OthersMessageContent.swift in Sources */,
+				6DF4EB372CB97F04003AD1EB /* NewQuestionButton.swift in Sources */,
 				6DBDD5782C955D6C00BB959B /* LoginManager.swift in Sources */,
 				6DE7A3352C9738E3003ADD5E /* CodeDiffView.swift in Sources */,
 				6DE7A35E2C97D497003ADD5E /* ChatViewModel.swift in Sources */,
@@ -634,6 +655,7 @@
 				6D70F8372C97FF3200A8BC56 /* AddMemberViewModel.swift in Sources */,
 				6D70F84B2C97FF5800A8BC56 /* SignupViewModel.swift in Sources */,
 				6D70F8382C97FF3200A8BC56 /* CodeDiffView.swift in Sources */,
+				6DF4EB352CB97DEE003AD1EB /* NewQuestionView.swift in Sources */,
 				6D70F8392C97FF3200A8BC56 /* MyMessageContent.swift in Sources */,
 				6D70F83A2C97FF3200A8BC56 /* AuthSecureField.swift in Sources */,
 				6D70F83B2C97FF3200A8BC56 /* AuthButton.swift in Sources */,
