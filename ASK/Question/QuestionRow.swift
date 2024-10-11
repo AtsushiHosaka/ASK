@@ -13,6 +13,7 @@ struct QuestionRow: View {
     var title: String {
         if let messages = question.messages {
             if let lastMessage = messages.last {
+                print(lastMessage.content)
                 return String(lastMessage.content.prefix(15))
             }
         }
@@ -27,6 +28,7 @@ struct QuestionRow: View {
             Text("\(question.createDate, formatter: dateFormatter)に作成")
                 .font(.subheadline)
         }
+        .padding()
     }
     
     private var dateFormatter: DateFormatter {

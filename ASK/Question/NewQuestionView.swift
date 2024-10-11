@@ -16,19 +16,11 @@ struct NewQuestionView: View {
     @State private var selectedCode: String = ""
     @State private var errorContent: String = ""
     @State private var errorMessage: String = ""
-    @State private var selectedMacOSVersion = ""
     @State private var selectediOSVersion = ""
     @State private var selectedEditor = ""
     @State private var selectedEditorVersion = ""
     
     @State private var emptyMessage: String = ""
-    
-    // macOSバージョンの選択肢（最新: macOS 15.0）
-    let macOSVersions = [
-        "macOS 15.0", "macOS 14.1", "macOS 14.0",
-        "macOS 13.4", "macOS 13.3", "macOS 13.2", "macOS 13.1", "macOS 13.0",
-        "macOS 12.4", "macOS 12.3", "macOS 12.2", "macOS 12.1", "macOS 12.0"
-    ]
 
     // iOSバージョンの選択肢（最新: iOS 18.0）
     let iOSVersions = [
@@ -72,24 +64,6 @@ struct NewQuestionView: View {
             NewQuestionTextField(title: "エラー内容", text: $errorContent)
             
             NewQuestionTextField(title: "エラー文章", text: $errorMessage)
-            
-            // macOSバージョンのセレクター
-            Picker("macOS バージョン", selection: $selectedMacOSVersion) {
-                ForEach(macOSVersions, id: \.self) { version in
-                    Text(version).tag(version)
-                }
-            }
-            .pickerStyle(MenuPickerStyle()) // ドロップダウンメニューとして表示
-            .frame(maxWidth: 300)
-            
-            // iOSバージョンのセレクター
-            Picker("iOS バージョン", selection: $selectediOSVersion) {
-                ForEach(iOSVersions, id: \.self) { version in
-                    Text(version).tag(version)
-                }
-            }
-            .pickerStyle(MenuPickerStyle())
-            .frame(maxWidth: 300)
             
             // エディターのセレクター
             Picker("エディター", selection: $selectedEditor) {
@@ -174,10 +148,8 @@ struct NewQuestionView: View {
             messages.append(message)
         }
         
-        if !selectedMacOSVersion.isEmpty {
-            let message = Message(date: Date(), content: "macOSのバージョンは\(selectedMacOSVersion)です", sentBy: userId)
-            messages.append(message)
-        }
+        let osVersion = ProcessInfo.processInfo.operatingSystemVersion
+        messages.append(Message(date: Date(), content: "macOSのバージョンは\(osVersion.majorVersion).\(osVersion.minorVersion).\(osVersion.patchVersion)です", sentBy: userId))
         
         if !selectediOSVersion.isEmpty {
             let message = Message(date: Date(), content: "iOSのバージョンは\(selectediOSVersion)です", sentBy: userId)

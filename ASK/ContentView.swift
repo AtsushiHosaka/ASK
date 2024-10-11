@@ -19,7 +19,9 @@ struct ContentView: View {
             
             if loginManager.isLoggedIn {
                 QuestionList()
+                #if os(macOS)
                     .frame(minWidth: 800, minHeight: 600)
+                #endif
             } else {
                 LoginView()
                     .onAppear {

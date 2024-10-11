@@ -34,20 +34,24 @@ struct QuestionList: View {
                                 } label: {
                                     QuestionRow(question: question)
                                 }
+                                .listRowBackground(Color.white.opacity(0.3))
                             }
                         }
                     }
                     .scrollContentBackground(.hidden)
                     .background(Color.clear)
+                    .navigationTitle("質問一覧")
                     
                     Spacer()
                     
                         .toolbar {
+                            #if os(macOS)
                             ToolbarItem {
                                 NavigationLink(destination: NewQuestionView()) {
                                     Label("Add Item", systemImage: "plus")
                                 }
                             }
+                            #endif
                             ToolbarItem {
                                 Button{
                                     showingAlert = true
