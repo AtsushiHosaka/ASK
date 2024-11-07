@@ -14,10 +14,12 @@ struct ASKApp: App {
         FirebaseApp.configure()
     }
 
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+
         .windowStyle(HiddenTitleBarWindowStyle())
     }
 }

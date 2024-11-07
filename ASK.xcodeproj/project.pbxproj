@@ -276,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				6DBDD33D2C949C1D00BB959B /* ASKApp.swift */,
+
 				6DBDD5422C952DF000BB959B /* ContentView.swift */,
 				6DE7A35F2C97E47B003ADD5E /* ContentViewModel.swift */,
 				6DBDD54B2C9535B200BB959B /* Chat */,
@@ -285,6 +286,7 @@
 				6DBDD3502C94A0B100BB959B /* Model */,
 				6DBDD5762C95583800BB959B /* Login */,
 				6DBDD3552C94A32500BB959B /* View */,
+
 				6DBDD3432C949C1E00BB959B /* Assets.xcassets */,
 				6DBDD3482C949C1E00BB959B /* ASK.entitlements */,
 				6DBDD56D2C95516900BB959B /* GoogleService-Info.plist */,
