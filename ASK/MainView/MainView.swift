@@ -65,8 +65,8 @@ struct MainView: View {
                         if !initialLoaded {
                             Task {
                                 if dataManager.questions.isEmpty {
-                                    dataManager.addQuestionsListener()
                                     await dataManager.loadQuestions()
+                                    dataManager.addQuestionsListener()
                                     initialLoaded = true
                                 }
                             }
