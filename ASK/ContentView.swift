@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 import FirebaseAuth
 
 struct ContentView: View {
@@ -31,12 +30,8 @@ struct ContentView: View {
             }
         }
     }
-    
-    
-
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
