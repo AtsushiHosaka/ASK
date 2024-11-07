@@ -17,6 +17,8 @@ class DataManager: ObservableObject {
     @Published var questions: [Question] = []
     @Published var isLoading = false
     
+    @Published var projects: [Project] = []
+    
     private var listener: ListenerRegistration?
     private var messageListeners: [String: ListenerRegistration] = [:]
     
@@ -33,7 +35,7 @@ class DataManager: ObservableObject {
             .whereField("memberID", arrayContains: userId)
             .addSnapshotListener { snapshot, error in
                 if let error = error {
-                    print("Error fetching questions: \(error)")
+                    print("Error fetching questions1: \(error)")
                     DispatchQueue.main.async {
                         self.isLoading = false
                     }
@@ -124,7 +126,27 @@ class DataManager: ObservableObject {
                 self.isLoading = false
             }
         } catch {
-            print("Error fetching questions: \(error)")
+            print("Error fetching questions2: \(error)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func fetchProjects() async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        do {
+            let projects = try await FirestoreAPI.fetchProjects()
+            
+            DispatchQueue.main.async {
+                self.projects = projects
+                self.isLoading = false
+            }
+        } catch {
+            print("Error fetching projects: \(error)")
             DispatchQueue.main.async {
                 self.isLoading = false
             }

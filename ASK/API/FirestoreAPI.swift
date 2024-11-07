@@ -127,4 +127,50 @@ class FirestoreAPI {
             throw NSError(domain: "FirebaseAPI", code: 500, userInfo: [NSLocalizedDescriptionKey: "Failed to add message: \(error.localizedDescription)"])
         }
     }
+    
+    static func fetchProjects() async throws -> [Project] {
+        guard let userId = LoginManager.loadUserUID() else {
+            return []
+        }
+        
+        let snapshot = try await db.collection("projects").whereField("memberIDList", arrayContains: userId).getDocuments()
+        
+        let firestoreProjects = try snapshot.documents.compactMap { try $0.data(as: FirestoreProject.self) }
+        
+        var projects: [Project] = []
+        
+        for firestoreProject in firestoreProjects {
+            var project = Project(firestoreProject: firestoreProject)
+            project.iconImage = await FirebaseStorageAPI.fetchImageData(from: firestoreProject.iconImageName)
+            project.memberList = try await FirestoreAPI.fetchUsersByIds(ids: firestoreProject.memberIDList)
+            project.threadList = try await FirestoreAPI.fetchThreadList(projectID: project.id)
+            projects.append(project)
+        }
+        
+        return projects
+    }
+    
+    static func fetchThreadList(projectID: String) async throws -> [Thread] {
+        let snapshot = try await db.collection("projects").document(projectID).collection("threadList").getDocuments()
+        
+        let firestoreThreadList = try snapshot.documents.compactMap { try $0.data(as: FirestoreThread.self) }
+        
+        var threadList: [Thread] = []
+        
+        for firestoreThread in firestoreThreadList {
+            var thread = Thread(firestoreThread: firestoreThread)
+            thread.chatMessages = try await fetchChatMessageList(projectID: projectID, threadID: thread.id)
+            threadList.append(thread)
+        }
+        
+        return threadList
+    }
+    
+    static private func fetchChatMessageList(projectID: String, threadID: String) async throws -> [Message] {
+        let snapshot = try await db.collection("projects").document(projectID).collection("threadList").document(threadID).collection("messageList").getDocuments()
+        
+        let messages = try snapshot.documents.compactMap { try $0.data(as: Message.self) }
+        
+        return messages
+    }
 }

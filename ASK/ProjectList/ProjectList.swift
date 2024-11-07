@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct ProjectList: View {
-    let projectList: [Project] = [
-        .init(id: "1", projectPath: "SwiftUI", threadList: [.init(id: "1", errorMessage: ""), .init(id: "2", errorMessage: "?")]),
-        .init(id: "2", projectPath: "SwiftUI2", threadList: [.init(id: "1", errorMessage: ""), .init(id: "2", errorMessage: "?")]),
-        .init(id: "3", projectPath: "SwiftUI3", threadList: [.init(id: "1", errorMessage: ""), .init(id: "2", errorMessage: "?")]),
-    ]
+    @ObservedObject var dataManager = DataManager.shared
     
     @Binding var selectedProject: Project?
     
@@ -25,7 +21,7 @@ struct ProjectList: View {
                 .frame(height: 75)
                 .padding()
             
-            List(projectList, id: \.self, selection: $selectedProject) { project in
+            List(dataManager.projects, id: \.self, selection: $selectedProject) { project in
                 ProjectListCell(project: project)
             }
             .scrollContentBackground(.hidden)

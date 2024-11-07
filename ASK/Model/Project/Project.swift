@@ -44,4 +44,18 @@ struct Project: Identifiable, Hashable {
         self.editorVersion = 0
         self.languageList = []
     }
+    
+    init(firestoreProject: FirestoreProject) {
+        self.id = firestoreProject.id!
+        self.projectPath = firestoreProject.projectPath
+        self.iconImageName = firestoreProject.iconImageName
+        self.iconImage = nil
+        self.createdAt = firestoreProject.createdAt
+        self.memberList = []
+        self.threadList = []
+        self.editorType = firestoreProject.editorType
+        self.editorVersion = firestoreProject.editorVersion
+        self.editorVersion = firestoreProject.editorVersion
+        self.languageList = firestoreProject.languageList
+    }
 }

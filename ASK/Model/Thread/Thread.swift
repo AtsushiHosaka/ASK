@@ -27,4 +27,11 @@ struct Thread: Identifiable, Hashable {
         self.createdUserID = ""
         self.chatMessages = []
     }
+    
+    init(firestoreThread: FirestoreThread) {
+        self.id = firestoreThread.id!
+        self.errorMessage = firestoreThread.errorMessage
+        self.createdUserID = firestoreThread.createdUserID
+        self.chatMessages = []
+    }
 }
