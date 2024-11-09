@@ -18,6 +18,7 @@ struct CodeDiffView: View {
         SyntaxHighlighter(format: AttributedStringOutputFormat(theme: theme))
     }
     
+    var filePath: String
     var codeDiffBefore: String
     var codeDiffAfter: String
     
@@ -32,43 +33,48 @@ struct CodeDiffView: View {
     @State var addedRows: [Int] = []
     
     var body: some View {
-        HStack(spacing: 30) {
-            VStack(alignment: .leading) {
-                ForEach(Array(linesBefore.enumerated()), id: \.element) { index, line in
-                    Text(AttributedString(highlighter.highlight(line)))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 10)
-                        .background(
-                            Rectangle()
-                                .fill(deletedRows.contains(index + 1) ? Color(red: 252 / 255, green: 236 / 255, blue: 234 / 255) : Color.clear)
-                        )
+        VStack(alignment: .leading) {
+            Text(filePath)
+                .padding(.horizontal)
+            
+            HStack(spacing: 30) {
+                VStack(alignment: .leading) {
+                    ForEach(Array(linesBefore.enumerated()), id: \.element) { index, line in
+                        Text(AttributedString(highlighter.highlight(line)))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 10)
+                            .background(
+                                Rectangle()
+                                    .fill(deletedRows.contains(index + 1) ? Color(red: 252 / 255, green: 236 / 255, blue: 234 / 255) : Color.clear)
+                            )
+                    }
+                }
+                
+                Image(systemName: "arrow.forward")
+                    .fontWeight(.heavy)
+                
+                VStack(alignment: .leading) {
+                    ForEach(Array(linesAfter.enumerated()), id: \.element) { index, line in
+                        Text(AttributedString(highlighter.highlight(line)))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 10)
+                            .background(
+                                Rectangle()
+                                    .fill(addedRows.contains(index + 1) ? Color(red: 224 / 255, green: 250 / 255, blue: 227 / 255) : Color.clear)
+                            )
+                    }
                 }
             }
-            
-            Image(systemName: "arrow.forward")
-                .fontWeight(.heavy)
-            
-            VStack(alignment: .leading) {
-                ForEach(Array(linesAfter.enumerated()), id: \.element) { index, line in
-                    Text(AttributedString(highlighter.highlight(line)))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 10)
-                        .background(
-                            Rectangle()
-                                .fill(addedRows.contains(index + 1) ? Color(red: 224 / 255, green: 250 / 255, blue: 227 / 255) : Color.clear)
-                        )
-                }
-            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(Color.white)
+                    .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
+            )
         }
         .onAppear {
             compareStrings()
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 5)
-                .fill(Color.white)
-                .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
-        )
     }
     
     private func backgroundColor(rowNumber: Int) -> SwiftUI.Color {

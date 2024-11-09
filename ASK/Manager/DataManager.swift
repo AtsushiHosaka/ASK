@@ -67,6 +67,8 @@ class DataManager: ObservableObject {
                     for firestoreProject in projects {
                         var project = Project(firestoreProject: firestoreProject)
                         
+                        project.iconImage = await FirebaseStorageAPI.fetchImageData(from: project.iconImageName)
+                        
                         // メンバー情報の取得
                         let members = try await FirestoreAPI.fetchUsersByIds(ids: firestoreProject.memberIDList)
                         project.memberList = members
@@ -160,7 +162,9 @@ class DataManager: ObservableObject {
     
     func addMessagesListener(projectID: String, threadID: String) async {
         let listenerKey = "\(projectID)_\(threadID)"
-        messageListeners[listenerKey]?.remove()
+        if let listener = messageListeners[listenerKey] {
+            listener.remove()
+        }
         
         let listener = Firestore.firestore()
             .collection("projects")

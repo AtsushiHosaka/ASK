@@ -19,6 +19,7 @@ class FirebaseStorageAPI {
             
             return imageData
         } catch {
+            print("Error fetching image data: \(error)")
             return nil
         }
     }

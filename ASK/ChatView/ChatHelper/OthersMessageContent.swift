@@ -40,8 +40,9 @@ struct OthersMessageContent: View {
                 }
                 
                 if let codeDiffBefore = message.codeDiffBefore,
-                   let codeDiffAfter = message.codeDiffAfter {
-                    CodeDiffView(codeDiffBefore: codeDiffBefore, codeDiffAfter: codeDiffAfter)
+                   let codeDiffAfter = message.codeDiffAfter,
+                   let filePath = message.filePath {
+                    CodeDiffView(filePath: filePath, codeDiffBefore: codeDiffBefore, codeDiffAfter: codeDiffAfter)
                 }
             }
         }

@@ -39,6 +39,9 @@
 		6D7D56D82CDF24B9002B793E /* NewThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56D72CDF24B9002B793E /* NewThreadView.swift */; };
 		6D7D56DA2CDFB0F8002B793E /* String+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56D92CDFB0F8002B793E /* String+Utility.swift */; };
 		6D7D56E02CDFDCE3002B793E /* ThreadProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56DF2CDFDCE3002B793E /* ThreadProjectView.swift */; };
+		6D7D56E32CE00BE6002B793E /* ProjectIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56E22CE00BE6002B793E /* ProjectIcon.swift */; };
+		6D7D56E52CE01391002B793E /* FileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56E42CE01391002B793E /* FileNode.swift */; };
+		6D7D56E82CE013D7002B793E /* FileTreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56E72CE013D7002B793E /* FileTreeView.swift */; };
 		6D8DA1AF2CDBEFD3001923AB /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8DA1AE2CDBEFD3001923AB /* MainView.swift */; };
 		6D8DA1CA2CDCB0B8001923AB /* ProjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8DA1C92CDCB0B8001923AB /* ProjectList.swift */; };
 		6D8DA1DF2CDCB5BC001923AB /* ProjectListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8DA1DE2CDCB5BC001923AB /* ProjectListCell.swift */; };
@@ -169,6 +172,9 @@
 		6D7D56D92CDFB0F8002B793E /* String+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Utility.swift"; sourceTree = "<group>"; };
 		6D7D56DE2CDFD791002B793E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6D7D56DF2CDFDCE3002B793E /* ThreadProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadProjectView.swift; sourceTree = "<group>"; };
+		6D7D56E22CE00BE6002B793E /* ProjectIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectIcon.swift; sourceTree = "<group>"; };
+		6D7D56E42CE01391002B793E /* FileNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNode.swift; sourceTree = "<group>"; };
+		6D7D56E72CE013D7002B793E /* FileTreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTreeView.swift; sourceTree = "<group>"; };
 		6D8DA1AE2CDBEFD3001923AB /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		6D8DA1C92CDCB0B8001923AB /* ProjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectList.swift; sourceTree = "<group>"; };
 		6D8DA1DE2CDCB5BC001923AB /* ProjectListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListCell.swift; sourceTree = "<group>"; };
@@ -313,6 +319,15 @@
 			path = ThreadProjectView;
 			sourceTree = "<group>";
 		};
+		6D7D56E62CE013A0002B793E /* FileTreeView */ = {
+			isa = PBXGroup;
+			children = (
+				6D7D56E72CE013D7002B793E /* FileTreeView.swift */,
+				6D7D56E42CE01391002B793E /* FileNode.swift */,
+			);
+			path = FileTreeView;
+			sourceTree = "<group>";
+		};
 		6D8DA1B02CDBF050001923AB /* MainView */ = {
 			isa = PBXGroup;
 			children = (
@@ -335,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				6D8DA1DE2CDCB5BC001923AB /* ProjectListCell.swift */,
+				6D7D56E22CE00BE6002B793E /* ProjectIcon.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -481,6 +497,7 @@
 			isa = PBXGroup;
 			children = (
 				6DE7A3472C978946003ADD5E /* UserIcon.swift */,
+				6D7D56E62CE013A0002B793E /* FileTreeView */,
 				6DF4EB3A2CB97F53003AD1EB /* NewQuestionHelper */,
 				6DE7A33C2C978068003ADD5E /* AuthHelper */,
 			);
@@ -774,6 +791,7 @@
 				6DBDD3402C949C1D00BB959B /* ChatView.swift in Sources */,
 				6DE7A3392C97536C003ADD5E /* AddMemberView.swift in Sources */,
 				6DBDD33E2C949C1D00BB959B /* ASKApp.swift in Sources */,
+				6D7D56E32CE00BE6002B793E /* ProjectIcon.swift in Sources */,
 				6D8DA1FE2CDCCB77001923AB /* ThreadView.swift in Sources */,
 				6DBDD59F2C96DA0500BB959B /* CodeView.swift in Sources */,
 				6DE7A35C2C97B5C9003ADD5E /* AddMemberViewModel.swift in Sources */,
@@ -812,9 +830,11 @@
 				6DE7A3352C9738E3003ADD5E /* CodeDiffView.swift in Sources */,
 				6DE7A35E2C97D497003ADD5E /* ChatViewModel.swift in Sources */,
 				6DBDD4082C94B33500BB959B /* FirestoreAPI.swift in Sources */,
+				6D7D56E52CE01391002B793E /* FileNode.swift in Sources */,
 				6D7D56D32CDE572F002B793E /* Message.swift in Sources */,
 				6D7D56D82CDF24B9002B793E /* NewThreadView.swift in Sources */,
 				6D8DA1CA2CDCB0B8001923AB /* ProjectList.swift in Sources */,
+				6D7D56E82CE013D7002B793E /* FileTreeView.swift in Sources */,
 				6D8DA1FC2CDCC59A001923AB /* LanguageType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

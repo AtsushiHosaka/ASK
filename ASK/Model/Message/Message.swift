@@ -13,7 +13,7 @@ struct Message: Hashable, Identifiable {
     var date: Date
     var content: String
     var sentBy: String
-    var sentUser: User
+    var sentUser: User?
     
     var filePath: String?
     var code: String?
@@ -22,12 +22,12 @@ struct Message: Hashable, Identifiable {
     
     var replyTo: String?
     
-    init(date: Date, content: String, sentBy: String, filePath: String? = nil, code: String? = nil, codeDiffBefore: String? = nil, codeDiffAfter: String? = nil, replyTo: String? = nil) {
+    init(date: Date, content: String, sentBy: String, sentUser: User? = nil, filePath: String? = nil, code: String? = nil, codeDiffBefore: String? = nil, codeDiffAfter: String? = nil, replyTo: String? = nil) {
         self.id = UUID().uuidString
         self.date = date
         self.content = content
         self.sentBy = sentBy
-        self.sentUser = defaultUser
+        self.sentUser = sentUser
         self.filePath = filePath
         self.code = code
         self.codeDiffBefore = codeDiffBefore
@@ -53,13 +53,11 @@ struct Message: Hashable, Identifiable {
         self.date = firestoreMessage.date
         self.content = firestoreMessage.content
         self.sentBy = firestoreMessage.sentBy
-        self.sentUser = User(id: "bTjcp7QPo5Sf6ytaRhW3mPPbJw52", name: "error", imageName: "as.jpeg")
+        self.sentUser = nil
         self.filePath = firestoreMessage.filePath
         self.code = firestoreMessage.code
         self.codeDiffBefore = firestoreMessage.codeDiffBefore
         self.codeDiffAfter = firestoreMessage.codeDiffAfter
         self.replyTo = firestoreMessage.replyTo
     }
-    
-    let defaultUser = User(id: "bTjcp7QPo5Sf6ytaRhW3mPPbJw52", name: "error", imageName: "as.jpeg")
 }

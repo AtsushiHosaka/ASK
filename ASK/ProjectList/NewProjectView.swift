@@ -173,7 +173,7 @@ struct NewProjectView: View {
         
         Task {
             do {
-                let imageName = try await FirebaseStorageAPI.uploadImage(uid: userId, imageData: imageData)
+                let imageName = try await FirebaseStorageAPI.uploadImage(uid: UUID().uuidString, imageData: imageData)
                 let newProject = Project(id: UUID().uuidString, projectPath: selectedDirectry, iconImageName: imageName, createdAt: Date(), memberList: memberList, threadList: [Thread](), editorType: selectedEditor, editorVersion: editorVersionFloat, osVersion: osVersion, languageList: selectedLanguageTypes)
                 
                 try await FirestoreAPI.addProject(project: newProject)

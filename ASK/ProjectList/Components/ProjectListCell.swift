@@ -12,9 +12,7 @@ struct ProjectListCell: View {
     
     var body: some View {
         HStack(alignment: .center) {
-            Image(systemName: "person.crop.circle.badge.plus")
-                .resizable()
-                .scaledToFit()
+            ProjectIcon(imageData: project.iconImage)
                 .frame(width: 40, height: 40)
             
             VStack(alignment: .leading) {

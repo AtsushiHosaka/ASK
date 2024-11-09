@@ -20,6 +20,14 @@ struct ChatView: View {
     @State private var textHeight: CGFloat = 30
     @State private var scrollToMessageID: String? = nil
     
+    @State private var rootNode: FileNode?
+    @State private var isLoading = true
+    @State private var error: Error?
+    @State private var selectedFileContent: String?
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
     var project: Project? {
         dataManager.projects.first { $0.id == projectID }
     }
@@ -100,10 +108,19 @@ struct ChatView: View {
                     }
                 }
             }
-            .onAppear {
-//                if let id = question.id {
-//                    dataManager.addMessagesListener(for: id)
-//                }
+            .onAppear {                
+                Task {
+                    do {
+                        var downloadedNode = try await FirebaseStorageAPI.downloadProject(threadID: threadID)
+                        
+                        downloadedNode.name = (project?.projectPath ?? "error").extractLastPathComponent()
+                        rootNode = downloadedNode
+                        isLoading = false
+                    } catch {
+                        self.error = error
+                        isLoading = false
+                    }
+                }
             }
         }
     }
@@ -122,7 +139,7 @@ struct ChatView: View {
                             }
                     }
                     
-                    MessageRow(message: message, user: message.sentUser)
+                    MessageRow(message: message, user: message.sentUser!)
                         .listRowSeparator(.hidden)
                         .id(message.id)
                         .contextMenu {
@@ -131,6 +148,55 @@ struct ChatView: View {
                             } label: {
                                 Text("返信する")
                             }
+                            
+                            if let codeDiffBefore = message.codeDiffBefore,
+                               let codeDiffAfter = message.codeDiffAfter,
+                               let filePath = message.filePath {
+                                Button {
+                                    let panel = NSOpenPanel()
+                                    panel.allowsMultipleSelection = false
+                                    panel.canChooseDirectories = false
+                                    panel.canChooseFiles = true
+                                    panel.allowedContentTypes = [.plainText] // 必要に応じて調整
+                                    
+                                    let projectURL = URL(fileURLWithPath: filePath, isDirectory: true)
+                                    panel.directoryURL = projectURL
+                                    
+                                    panel.begin { response in
+                                        if response == .OK {
+                                            guard let fileURL = panel.url else { return }
+                                            
+                                            do {
+                                                // 現在のファイルの内容を読み込み
+                                                let currentContent = try String(contentsOf: fileURL, encoding: .utf8)
+                                                
+                                                // 現在の内容がcodeDiffBeforeと一致するか確認
+                                                guard currentContent == message.codeDiffBefore else {
+                                                    alertMessage = "ファイルの内容が変更されています"
+                                                    showAlert = true
+                                                    return
+                                                }
+                                                
+                                                // 新しい内容を書き込み
+                                                try codeDiffAfter.write(to: fileURL, atomically: true, encoding: .utf8)
+                                                
+                                                alertMessage = "変更を適用しました"
+                                                showAlert = true
+                                            } catch {
+                                                alertMessage = "エラーが発生しました: \(error.localizedDescription)"
+                                                showAlert = true
+                                            }
+                                        }
+                                    }
+                                } label: {
+                                    Text("変更を適用する")
+                                }
+                            }
+                        }
+                        .alert("通知", isPresented: $showAlert) {
+                            Button("OK") {}
+                        } message: {
+                            Text(alertMessage)
                         }
                 }
                 .listRowSeparator(.hidden)
@@ -141,39 +207,44 @@ struct ChatView: View {
     }
     
     var codeDiffEditor: some View {
-        VStack {
-            
-            HStack {
-                TextEditor(text: $viewModel.codeDiffBefore)
-                    .scrollContentBackground(.hidden)
-                    .font(.system(size: 14))
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(.white)
-                    )
-                    .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
-                
-                Image(systemName: "arrow.forward")
-                
-                TextEditor(text: $viewModel.codeDiffAfter)
-                    .scrollContentBackground(.hidden)
-                    .font(.system(size: 14))
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(.white)
-                    )
-                    .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
-                
-                Button {
-                    showCodeDiff = false
-                } label: {
-                    Image(systemName: "multiply.circle")
-                }
-                .buttonStyle(PlainButtonStyle())
-                .padding()
+        HStack {
+            if isLoading {
+                ProgressView("Loading project files...")
+            } else if let error = error {
+                Text("Error: \(error.localizedDescription)")
+            } else if let rootNode = rootNode {
+                FileTreeView(node: rootNode, parentPath: project?.projectPath ?? "", selectedFileContent: $viewModel.codeDiffBefore, selectedFilePath: $viewModel.filePath)
             }
+            
+            TextEditor(text: $viewModel.codeDiffBefore)
+                .scrollContentBackground(.hidden)
+                .font(.system(size: 14))
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(.white)
+                )
+                .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
+            
+            Image(systemName: "arrow.forward")
+            
+            TextEditor(text: $viewModel.codeDiffAfter)
+                .scrollContentBackground(.hidden)
+                .font(.system(size: 14))
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(.white)
+                )
+                .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
+            
+            Button {
+                showCodeDiff = false
+            } label: {
+                Image(systemName: "multiply.circle")
+            }
+            .buttonStyle(PlainButtonStyle())
+            .padding()
         }
     }
     
@@ -235,7 +306,7 @@ struct ChatView: View {
             
             Button {
                 if !viewModel.newMessageContent.isEmpty {
-                    viewModel.newMessage(projectID: projectID, threadID: threadID)
+                    viewModel.newMessage(projectID: projectID, threadID: threadID, projectPath: project?.projectPath ?? "")
                     showCodeDiff = false
                 }
             } label: {

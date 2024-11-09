@@ -15,7 +15,7 @@ class ChatViewModel: ObservableObject {
     @Published var codeDiffBefore: String = ""
     @Published var codeDiffAfter: String = ""
     
-    func newMessage(projectID: String, threadID: String) {
+    func newMessage(projectID: String, threadID: String, projectPath: String) {
         var tempMessage = Message(date: Date(), content: newMessageContent, sentBy: LoginManager.loadUserUID()!)
             
         if !code.isEmpty {
@@ -24,6 +24,7 @@ class ChatViewModel: ObservableObject {
         }
         
         if !codeDiffBefore.isEmpty, !codeDiffAfter.isEmpty {
+            tempMessage.filePath = projectPath + "/" + filePath
             tempMessage.codeDiffBefore = codeDiffBefore
             tempMessage.codeDiffAfter = codeDiffAfter
         }

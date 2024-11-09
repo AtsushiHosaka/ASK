@@ -16,7 +16,10 @@ struct ThreadProjectView: View {
     @State private var rootNode: FileNode?
     @State private var isLoading = true
     @State private var error: Error?
-    @State private var selectedFileContent: String?  // 選択されたファイルの内容
+    @State private var selectedFileContent: String = ""
+    @State private var selectedFilePath: String = ""
+    @State private var showingSaveError = false
+    @State private var saveErrorMessage = ""
     
     var body: some View {
         VStack {
@@ -32,34 +35,46 @@ struct ThreadProjectView: View {
                 .buttonStyle(PlainButtonStyle())
                 
                 Spacer()
+                
+                Button(action: {
+                    if !isLoading && error == nil {
+                        saveProjectToDirectory()
+                    }
+                }) {
+                    Image(systemName: "square.and.arrow.down")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
             .padding(.horizontal)
             
-            Group {
-                if isLoading {
-                    ProgressView("Loading project files...")
-                } else if let error = error {
-                    Text("Error: \(error.localizedDescription)")
-                } else if let rootNode = rootNode {
-                    HStack(spacing: 0) {
-                        // ファイルツリー（左側）
-                        ScrollView([.horizontal, .vertical]) {
-                            FileTreeView(node: rootNode, selectedFileContent: $selectedFileContent)
-                                .padding()
-                        }
-                        .frame(width: 200)
-                        
-                        // 区切り線
-                        Divider()
-                        
-                        // ファイル内容表示（右側）
-                        if let content = selectedFileContent {
-                            CodeView(filePath: "", code: selectedFileContent ?? "")
-                        } else {
-                            Text("ファイルを選択してください")
-                                .foregroundColor(.gray)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        }
+            if isLoading {
+                Spacer()
+                ProgressView("Loading project files...")
+                Spacer()
+            } else if let error = error {
+                Text("Error: \(error.localizedDescription)")
+            } else if let rootNode = rootNode {
+                HStack(spacing: 0) {
+                    // ファイルツリー（左側）
+                    ScrollView([.horizontal, .vertical]) {
+                        FileTreeView(node: rootNode, selectedFileContent: $selectedFileContent, selectedFilePath: $selectedFilePath)
+                            .padding()
+                    }
+                    .frame(width: 200)
+                    
+                    // 区切り線
+                    Divider()
+                    
+                    // ファイル内容表示（右側）
+                    if !selectedFileContent.isEmpty {
+                        CodeView(filePath: "", code: selectedFileContent)
+                    } else {
+                        Text("ファイルを選択してください")
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
             }
@@ -67,7 +82,10 @@ struct ThreadProjectView: View {
         .onAppear {
             Task {
                 do {
-                    rootNode = try await FirebaseStorageAPI.downloadProject(threadID: threadID)
+                    var downloadedNode = try await FirebaseStorageAPI.downloadProject(threadID: threadID)
+                    
+                    downloadedNode.name = projectPath.extractLastPathComponent()
+                    rootNode = downloadedNode
                     isLoading = false
                 } catch {
                     self.error = error
@@ -76,82 +94,26 @@ struct ThreadProjectView: View {
             }
         }
     }
-}
-
-// FileTreeView.swift
-struct FileTreeView: View {
-    let node: FileNode
-    private let depth: Int
-    @Binding var selectedFileContent: String?
     
-    // メインのイニシャライザ
-    init(node: FileNode, selectedFileContent: Binding<String?>) {
-        self.node = node
-        self.depth = 0
-        self._selectedFileContent = selectedFileContent
-    }
-    
-    // 内部で使用する深さを指定するイニシャライザ
-    private init(node: FileNode, depth: Int, selectedFileContent: Binding<String?>) {
-        self.node = node
-        self.depth = depth
-        self._selectedFileContent = selectedFileContent
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            // 現在のノードを表示
-            if depth > 0 {  // ルートノードは表示しない場合
-                HStack {
-                    if node.isDirectory {
-                        Image(systemName: "folder.fill")
-                            .foregroundColor(.blue)
-                        Text(node.name)
-                            .fontWeight(.medium)
-                    } else {
-                        Button(action: {
-                            selectedFileContent = node.content
-                        }) {
-                            HStack {
-                                Image(systemName: "doc.text")
-                                    .foregroundColor(.gray)
-                                Text(node.name)
-                            }
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
-                .padding(.leading, CGFloat(depth * 20))  // 階層に応じてインデント
-            }
-            
-            // 子ノードを表示（ディレクトリの場合）
-            if node.isDirectory, let children = node.children {
-                ForEach(children) { child in
-                    FileTreeView(node: child, depth: depth + 1, selectedFileContent: $selectedFileContent)
+    private func saveProjectToDirectory() {
+        guard let rootNode = rootNode else { return }
+        
+        let panel = NSSavePanel()
+        panel.title = "プロジェクトの保存先を選択"
+        panel.canCreateDirectories = true
+        panel.nameFieldStringValue = rootNode.name
+        
+        panel.begin { response in
+            if response == .OK, let url = panel.url {
+                do {
+                    try rootNode.saveToDirectory(at: url.deletingLastPathComponent())
+                } catch {
+                    showingSaveError = true
+                    saveErrorMessage = error.localizedDescription
                 }
             }
         }
-        .padding(.vertical, 2)
     }
 }
 
-// オプション: ファイルの内容を表示するビュー
-struct FileContentView: View {
-    let content: String
-    
-    var body: some View {
-        ScrollView {
-            Text(content)
-                .padding()
-                .font(.system(.body, design: .monospaced))
-        }
-    }
-}
 
-struct FileNode: Identifiable {
-    let id = UUID()
-    let name: String
-    let isDirectory: Bool
-    var children: [FileNode]?
-    var content: String?  // ファイルの内容
-}
