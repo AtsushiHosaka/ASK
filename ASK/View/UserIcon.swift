@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct UserIcon: View {
-    var user: User
+    var user: User?
     
     var body: some View {
-        if let imageData = user.imageData,
+        if let user,
+           let imageData = user.imageData,
            let nsImage = NSImage(data: imageData) {
             Image(nsImage: nsImage)
                 .resizable()

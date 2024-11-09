@@ -12,15 +12,24 @@ struct ChatView: View {
     @ObservedObject var dataManager = DataManager.shared
     @ObservedObject var viewModel = ChatViewModel()
     
-    var question: Question
+    var projectID: String
+    var threadID: String
     
     @State private var showAddMemberView: Bool = false
     @State private var showCodeDiff: Bool = false
     @State private var textHeight: CGFloat = 30
     @State private var scrollToMessageID: String? = nil
     
+    var project: Project? {
+        dataManager.projects.first { $0.id == projectID }
+    }
+    
+    var thread: Thread? {
+        project?.threadList.first { $0.id == threadID }
+    }
+    
     var messages: [Message] {
-        question.messages ?? []
+        thread?.chatMessages ?? []
     }
     
     var body: some View {
@@ -71,13 +80,13 @@ struct ChatView: View {
                     .background(.white.opacity(0.3))
                 }
                 
-                if showAddMemberView {
-                    AddMemberView(question: question)
-                        .frame(width: 300)
-                        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .trailing)))
-                        .padding()
-                        .background(.white.opacity(0.3))
-                }
+//                if showAddMemberView {
+//                    AddMemberView(project: project)
+//                        .frame(width: 300)
+//                        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .trailing)))
+//                        .padding()
+//                        .background(.white.opacity(0.3))
+//                }
             }
             .toolbar {
                 ToolbarItem {
@@ -92,9 +101,9 @@ struct ChatView: View {
                 }
             }
             .onAppear {
-                if let id = question.id {
-                    dataManager.addMessagesListener(for: id)
-                }
+//                if let id = question.id {
+//                    dataManager.addMessagesListener(for: id)
+//                }
             }
         }
     }
@@ -113,7 +122,7 @@ struct ChatView: View {
                             }
                     }
                     
-                    MessageRow(message: message, user: question.member!.first(where: { $0.id == message.sentBy })!)
+                    MessageRow(message: message, user: message.sentUser)
                         .listRowSeparator(.hidden)
                         .id(message.id)
                         .contextMenu {
@@ -222,7 +231,7 @@ struct ChatView: View {
             
             Button {
                 if !viewModel.newMessageContent.isEmpty {
-                    viewModel.newMessage(question: question)
+                    viewModel.newMessage(projectID: projectID, threadID: threadID)
                     showCodeDiff = false
                 }
             } label: {

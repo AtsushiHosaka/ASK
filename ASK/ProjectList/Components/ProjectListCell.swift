@@ -24,8 +24,8 @@ struct ProjectListCell: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .background(Color.clear)
         .padding()
+        .background(Color.white.opacity(0.5).cornerRadius(10))
     }
 }
 

@@ -7,7 +7,11 @@
 
 import Foundation
 
-enum EditorType: String, Codable {
+enum EditorType: String, Codable, CaseIterable {
     case Xcode
     case VSCode
+    
+    init?(from string: String) {
+        self.init(rawValue: string)
+    }
 }

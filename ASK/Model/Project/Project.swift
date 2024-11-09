@@ -17,9 +17,10 @@ struct Project: Identifiable, Hashable {
     var threadList: [Thread]
     var editorType: EditorType
     var editorVersion: Float
+    var osVersion: Float
     var languageList: [LanguageType]
     
-    init(id: String, projectPath: String, iconImageName: String, iconImage: Data? = nil, createdAt: Date, memberList: [User], threadList: [Thread], editorType: EditorType, editorVersion: Float, languageList: [LanguageType]) {
+    init(id: String, projectPath: String, iconImageName: String, iconImage: Data? = nil, createdAt: Date, memberList: [User], threadList: [Thread], editorType: EditorType, editorVersion: Float, osVersion: Float, languageList: [LanguageType]) {
         self.id = id
         self.projectPath = projectPath
         self.iconImageName = iconImageName
@@ -29,6 +30,7 @@ struct Project: Identifiable, Hashable {
         self.threadList = threadList
         self.editorType = editorType
         self.editorVersion = editorVersion
+        self.osVersion = osVersion
         self.languageList = languageList
     }
     
@@ -42,6 +44,7 @@ struct Project: Identifiable, Hashable {
         self.threadList = threadList
         self.editorType = .Xcode
         self.editorVersion = 0
+        self.osVersion = 0
         self.languageList = []
     }
     
@@ -56,6 +59,20 @@ struct Project: Identifiable, Hashable {
         self.editorType = firestoreProject.editorType
         self.editorVersion = firestoreProject.editorVersion
         self.editorVersion = firestoreProject.editorVersion
+        self.osVersion = firestoreProject.osVersion
         self.languageList = firestoreProject.languageList
+    }
+    
+    mutating func updateData(with newData: Project) {
+        self.projectPath = newData.projectPath
+        self.iconImageName = newData.iconImageName
+        self.iconImage = newData.iconImage
+        self.createdAt = newData.createdAt
+        self.memberList = newData.memberList
+        self.threadList = newData.threadList
+        self.editorType = newData.editorType
+        self.editorVersion = newData.editorVersion
+        self.osVersion = newData.osVersion
+        self.languageList = newData.languageList
     }
 }

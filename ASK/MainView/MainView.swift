@@ -15,7 +15,11 @@ struct MainView: View {
     @State private var initialLoaded = false
     @State private var showingAlert = false
     
-    @State private var selectedProject: Project?
+    @State private var selectedProjectID: String?
+    
+    var selectedProject: Project? {
+        dataManager.projects.first { $0.id == selectedProjectID }
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -27,8 +31,7 @@ struct MainView: View {
                     
                     Spacer()
                     
-                    Image(systemName: "person.fill")
-                        .resizable()
+                    UserIcon(user: loginManager.currentUser)
                         .frame(width: 20, height: 20)
                 }
                 .padding()
@@ -46,17 +49,17 @@ struct MainView: View {
                     .ignoresSafeArea(.all)
                 #endif
 
-                if dataManager.isLoading && !initialLoaded {
+                if dataManager.isLoading {
                     ProgressView("Loading...")
                 } else {
                     HStack {
-                        ProjectList(selectedProject: $selectedProject)
-                            .frame(width: 300)
+                        ProjectList(selectedProjectID: $selectedProjectID)
+                                                .frame(width: 300)
                         
                         Divider()
                         
-                        if let selectedProject {
-                            ThreadList(project: selectedProject)
+                        if let selectedProjectID {
+                            ThreadList(projectID: selectedProjectID)
                         } else {
                             Spacer()
                         }
@@ -64,9 +67,8 @@ struct MainView: View {
                     .onAppear {
                         if !initialLoaded {
                             Task {
-                                if dataManager.questions.isEmpty {
-                                    await dataManager.fetchProjects()
-//                                    dataManager.addQuestionsListener()
+                                if dataManager.projects.isEmpty {
+                                    await dataManager.addProjectsListener()
                                     initialLoaded = true
                                 }
                             }
@@ -74,6 +76,9 @@ struct MainView: View {
                     }
                 }
             }
+            #if os(macOS)
+            .toolbar(.hidden)
+            #endif
         }
     }
 
@@ -86,8 +91,4 @@ struct MainView: View {
             print("Error signing out: \(error.localizedDescription)")
         }
     }
-}
-
-#Preview {
-    MainView()
 }

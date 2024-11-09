@@ -16,10 +16,6 @@ struct User: Hashable, Identifiable, Codable {
     var imageName: String
     var imageData: Data?
     
-    var image: Image? {
-        Image(imageName)
-    }
-    
     init(id: String? = nil, name: String, imageName: String, imageData: Data? = nil) {
         self.id = id
         self.name = name

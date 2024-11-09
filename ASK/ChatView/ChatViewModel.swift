@@ -15,7 +15,7 @@ class ChatViewModel: ObservableObject {
     @Published var codeDiffBefore: String = ""
     @Published var codeDiffAfter: String = ""
     
-    func newMessage(question: Question) {
+    func newMessage(projectID: String, threadID: String) {
         var tempMessage = Message(date: Date(), content: newMessageContent, sentBy: LoginManager.loadUserUID()!)
             
         if !code.isEmpty {
@@ -35,7 +35,7 @@ class ChatViewModel: ObservableObject {
         let newMessage = tempMessage
         
         Task {
-            try await FirestoreAPI.addMessageToFirestore(question: question, message: newMessage)
+            try await FirestoreAPI.addMessageToFirestore(projectID: projectID, threadID: threadID, message: newMessage)
         }
         
         newMessageContent = ""

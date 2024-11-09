@@ -17,23 +17,18 @@ struct ContentView: View {
             LinearGradient(gradient: Gradient(colors: [.white, .blue.opacity(0.2), .white, .purple.opacity(0.2), .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea(.all)
             
-            if loginManager.isLoggedIn {
-                MainView()
-//                #if os(macOS)
-//                    .frame(minWidth: 800, minHeight: 600)
-//                #endif
+            if viewModel.isLoading {
+                ProgressView("Loading...")
             } else {
-                LoginView()
-                    .onAppear {
-                        viewModel.checkIfLoggedIn()
-                    }
+                if loginManager.isLoggedIn {
+                    MainView()
+                } else {
+                    LoginView()
+                }
             }
         }
+        .onAppear {
+            viewModel.checkIfLoggedIn()
+        }
     }
-    
-    
-}
-
-#Preview {
-    ContentView()
 }

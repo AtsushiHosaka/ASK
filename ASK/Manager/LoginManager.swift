@@ -11,9 +11,19 @@ import SwiftUI
 class LoginManager: ObservableObject {
     static var shared = LoginManager()
     
+    @Published var isLoggedIn: Bool = false
+    @Published var currentUser: User?
+    
     private static let userEmailKey = "savedUserEmail"
     private static let userPasswordKey = "savedUserPassword"
     private static let userUIDKey = "savedUserUID"
+    
+    func fetchUser() async throws {
+        let user = try await FirestoreAPI.fetchUser(userID: LoginManager.loadUserUID()!)
+        await MainActor.run {
+            self.currentUser = user
+        }
+    }
     
     static func saveUser(uid: String, email: String, password: String) {
         UserDefaults.standard.set(uid, forKey: userUIDKey)
@@ -38,6 +48,4 @@ class LoginManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: userEmailKey)
         UserDefaults.standard.removeObject(forKey: userPasswordKey)
     }
-    
-    @Published var isLoggedIn: Bool = false
 }

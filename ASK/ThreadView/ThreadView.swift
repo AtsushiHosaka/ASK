@@ -9,51 +9,82 @@ import SwiftUI
 
 struct ThreadView: View {
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var dataManager = DataManager.shared
     
-    var thread: Thread
+    let projectID: String
+    let threadID: String
+    
+    var project: Project? {
+        dataManager.projects.first { $0.id == projectID }
+    }
+    
+    var thread: Thread? {
+        project?.threadList.first { $0.id == threadID }
+    }
     
     var body: some View {
-        VStack {
-            HStack(alignment: .center) {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
-                }
-                
-                VStack(alignment: .leading) {
-                    Text(thread.errorMessage)
-                        .foregroundStyle(.primary)
+        Group {
+            if let thread = thread {
+                VStack {
+                    HStack(alignment: .center, spacing: 20) {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        VStack(alignment: .leading) {
+                            Text(thread.errorMessage)
+                                .font(.custom("HelveticaNeue", size: 25))
+                                .fontWeight(.heavy)
+                            
+                            Text("○分前")
+                                .font(.custom("HelveticaNeue", size: 15))
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            
+                        }) {
+                            Image(systemName: "text.and.command.macwindow")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Button(action: {
+                            
+                        }) {
+                            Image(systemName: "ellipsis")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .frame(height: 60)
+                    .padding(.horizontal)
                     
-                    Text("○分前")
-                }
-                
-                Spacer()
-                
-                Button(action: {
+                    Spacer()
                     
-                }) {
-                    Image(systemName: "text.and.command.macwindow")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
+                    ChatView(projectID: projectID, threadID: threadID)
                 }
-                
-                Button(action: {
-                    
-                }) {
-                    Image(systemName: "ellipsis")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
-                }
+            } else {
+                // プロジェクトまたはスレッドが見つからない場合の表示
+                Text("Loading...")
+                    .onAppear {
+                        print("Project or Thread not found")
+                        print("ProjectID: \(projectID)")
+                        print("ThreadID: \(threadID)")
+                    }
             }
-            .frame(height: 75)
-            
-            Spacer()
         }
     }
 }

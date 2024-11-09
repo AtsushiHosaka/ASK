@@ -9,29 +9,53 @@ import SwiftUI
 
 struct ProjectList: View {
     @ObservedObject var dataManager = DataManager.shared
-    
-    @Binding var selectedProject: Project?
+    @Binding var selectedProjectID: String?
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("ASKs")
-                .font(.custom("HelveticaNeue", size: 40))
-                .fontWeight(.heavy)
-                .foregroundStyle(.indigo)
-                .frame(height: 75)
-                .padding()
-            
-            List(dataManager.projects, id: \.self, selection: $selectedProject) { project in
-                ProjectListCell(project: project)
-            }
-            .scrollContentBackground(.hidden)
-            .background(Color.clear)
+        ZStack {
+            VStack(alignment: .leading) {
+                Text("ASKs")
+                    .font(.custom("HelveticaNeue", size: 40))
+                    .fontWeight(.heavy)
+                    .foregroundStyle(.indigo)
+                    .frame(height: 50)
+                    .padding(.horizontal)
                 
+                List(dataManager.projects, id: \.id) { project in
+                    ProjectListCell(project: project)
+                        .onTapGesture {
+                            selectedProjectID = project.id
+                        }
+                        .background(selectedProjectID == project.id ? Color.blue.opacity(0.1) : Color.clear)
+                }
+                .scrollContentBackground(.hidden)
+                .background(Color.clear)
+            }
+            .background(Color.clear)
+            
+            VStack {
+                Spacer()
+                    
+                HStack {
+                    Spacer()
+                    
+                    NavigationLink {
+                        NewProjectView()
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color.indigo)
+                                .frame(width: 50, height: 50)
+                            Image(systemName: "plus")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .heavy))
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                .padding()
+            }
+            .padding()
         }
-        .background(Color.clear)
     }
-}
-
-#Preview {
-    ProjectList(selectedProject: .constant(.init(id: "1", projectPath: "SwiftUI", threadList: [.init(id: "1", errorMessage: ""), .init(id: "2", errorMessage: "?")])))
 }

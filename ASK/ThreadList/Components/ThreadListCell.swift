@@ -11,39 +11,35 @@ struct ThreadListCell: View {
     var thread: Thread
     
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                Text("3分前")
+        HStack {
+            Image(systemName: "person.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30)
+                .padding(.leading, 20)
+            
+            VStack(alignment: .leading) {
+                Text(thread.errorMessage)
+                    .foregroundStyle(.primary)
+                Text("by aaaaa")
                     .foregroundStyle(.secondary)
             }
             
-            HStack {
-                Image(systemName: "person.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .padding(.leading, 20)
-                
-                VStack(alignment: .leading) {
-                    Text(thread.errorMessage)
-                        .foregroundStyle(.primary)
-                    Text("by aaaaa")
-                        .foregroundStyle(.secondary)
-                }
-                
-                Spacer()
+            Spacer()
+            
+            VStack {
+                Text("3分前")
+                    .foregroundStyle(.secondary)
                 
                 Image(systemName: "chevron.right")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
+                
+                Spacer()
             }
         }
         .padding()
+        .background(Color.white.opacity(0.5).cornerRadius(10))
     }
-}
-
-#Preview {
-    ThreadListCell(thread: .init(id: "", errorMessage: "aiueo"))
 }

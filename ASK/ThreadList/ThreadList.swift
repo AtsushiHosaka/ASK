@@ -8,51 +8,80 @@
 import SwiftUI
 
 struct ThreadList: View {
-    var project: Project
+    @ObservedObject var dataManager = DataManager.shared
+    let projectID: String
+    
+    var project: Project {
+        dataManager.projects.first { $0.id == projectID }!
+    }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .center) {
-                VStack(alignment: .leading) {
-                    Text("ASK about \(project.projectPath)")
-                        .font(.custom("HelveticaNeue", size: 40))
-                        .fontWeight(.heavy)
-                    Text("2024/01/01~")
-                        .font(.custom("HelveticaNeue", size: 20))
-                        .foregroundStyle(.secondary)
-                }
-                .frame(height: 75)
-                
-                Spacer()
-                
-                Button {
+        ZStack {
+            VStack(alignment: .leading) {
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading) {
+                        Text("ASK about \(project.projectPath)")
+                            .font(.custom("HelveticaNeue", size: 30))
+                            .fontWeight(.heavy)
+                        Text("2024/01/01~")
+                            .font(.custom("HelveticaNeue", size: 20))
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(height: 60)
                     
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
+                    Spacer()
+                    
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
-                .buttonStyle(PlainButtonStyle())
+                .padding()
+                
+                Divider()
+                
+                List(project.threadList, id: \.id) { thread in
+                    NavigationLink {
+                        ThreadView(projectID: projectID, threadID: thread.id)
+#if os(macOS)
+                            .toolbar(.hidden)
+#endif
+                    } label: {
+                        ThreadListCell(thread: thread)
+                    }
+                }
+                .scrollContentBackground(.hidden)
+                .background(Color.clear)
+            }
+            .background(Color.clear)
+            
+            VStack {
+                Spacer()
+                    
+                HStack {
+                    Spacer()
+                    
+                    NavigationLink {
+                        
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color.indigo)
+                                .frame(width: 50, height: 50)
+                            Image(systemName: "plus")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .heavy))
+                        }
+                    }
+                }
+                .padding()
             }
             .padding()
-            
-            Divider()
-            
-            List(project.threadList, id: \.self) { thread in
-                NavigationLink {
-                    ThreadView(thread: thread)
-                } label: {
-                    ThreadListCell(thread: thread)
-                }
-            }
-            .scrollContentBackground(.hidden)
-            .background(Color.clear)
         }
-        .background(Color.clear)
     }
-}
-
-#Preview {
-    ThreadList(project: .init(id: "", projectPath: "Stampy", threadList: [.init(id: "", errorMessage: "error in thread"), .init(id: "", errorMessage: "error in thread2")]))
 }

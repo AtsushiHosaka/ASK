@@ -10,10 +10,10 @@ import SwiftUI
 struct AddMemberView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var dataManager = DataManager.shared
-    
     @ObservedObject var viewModel = AddMemberViewModel()
     
-    var question: Question
+    var project: Project
+    var thread: Thread
     
     var body: some View {
         VStack {
@@ -62,7 +62,7 @@ struct AddMemberView: View {
                 title: Text("ユーザーを追加"),
                 message: Text("\(user.name)をチャットに追加しますか？"),
                 primaryButton: .default(Text("追加")) {
-                    viewModel.addUserToQuestion(questionId: question.id!, user: user)
+                    viewModel.addUserToProject(projectID: project.id, user: user)
                 },
                 secondaryButton: .cancel()
             )

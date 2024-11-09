@@ -17,20 +17,22 @@ class AddMemberViewModel: ObservableObject {
     
     func fetchUsers(for query: String) async {
         do {
-            users = try await FirestoreAPI.fetchUsers(for: query)
+            users = try await FirestoreAPI.searchUsers(for: query)
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    func addUserToQuestion(questionId: String, user: User) {
+    func addUserToProject(projectID: String, user: User) {
         Task {
             do {
-                try await FirestoreAPI.addUserToQuestion(questionId: questionId, user: user)
+                try await FirestoreAPI.addUserToProject(projectID: projectID, user: user)
                 dismiss?()  // 成功時に画面を閉じる
             } catch {
                 print(error.localizedDescription)  // エラーをログに表示
             }
         }
     }
+    
+    
 }

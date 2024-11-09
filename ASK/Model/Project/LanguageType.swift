@@ -7,6 +7,6 @@
 
 import Foundation
 
-enum LanguageType: String, Codable {
+enum LanguageType: String, Codable, CaseIterable {
     case swift
 }
