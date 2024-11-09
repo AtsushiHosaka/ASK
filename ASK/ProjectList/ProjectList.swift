@@ -14,7 +14,7 @@ struct ProjectList: View {
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
-                Text("ASKs")
+                Text("ASK")
                     .font(.custom("HelveticaNeue", size: 40))
                     .fontWeight(.heavy)
                     .foregroundStyle(.indigo)

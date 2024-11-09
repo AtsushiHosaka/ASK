@@ -8,20 +8,26 @@
 import SwiftUI
 
 struct ThreadListCell: View {
+    @ObservedObject var dataManager = DataManager.shared
+    @ObservedObject var loginManager = LoginManager.shared
+    
+    var projectID: String
     var thread: Thread
+    
+    var sentUser: User? {
+        return dataManager.projects.first(where: { $0.id == projectID })?.memberList.first(where: { $0.id == thread.createdUserID })
+    }
     
     var body: some View {
         HStack {
-            Image(systemName: "person.fill")
-                .resizable()
-                .scaledToFit()
+            UserIcon(user: sentUser)
                 .frame(width: 30, height: 30)
                 .padding(.leading, 20)
             
             VStack(alignment: .leading) {
                 Text(thread.errorMessage)
                     .foregroundStyle(.primary)
-                Text("by aaaaa")
+                Text("by \(sentUser?.name ?? "Unknown")")
                     .foregroundStyle(.secondary)
             }
             

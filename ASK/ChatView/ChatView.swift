@@ -69,7 +69,7 @@ struct ChatView: View {
                         
                         VStack {
                             if !viewModel.code.isEmpty {
-                                CodeView(fileName: viewModel.fileName, code: viewModel.code)
+                                CodeView(filePath: viewModel.filePath, code: viewModel.code)
                             }
                             
                             bottomEditorView
@@ -141,35 +141,39 @@ struct ChatView: View {
     }
     
     var codeDiffEditor: some View {
-        HStack {
-            TextEditor(text: $viewModel.codeDiffBefore)
-                .scrollContentBackground(.hidden)
-                .font(.system(size: 14))
+        VStack {
+            
+            HStack {
+                TextEditor(text: $viewModel.codeDiffBefore)
+                    .scrollContentBackground(.hidden)
+                    .font(.system(size: 14))
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(.white)
+                    )
+                    .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
+                
+                Image(systemName: "arrow.forward")
+                
+                TextEditor(text: $viewModel.codeDiffAfter)
+                    .scrollContentBackground(.hidden)
+                    .font(.system(size: 14))
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(.white)
+                    )
+                    .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
+                
+                Button {
+                    showCodeDiff = false
+                } label: {
+                    Image(systemName: "multiply.circle")
+                }
+                .buttonStyle(PlainButtonStyle())
                 .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(.white)
-                )
-                .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
-            
-            Image(systemName: "arrow.forward")
-            
-            TextEditor(text: $viewModel.codeDiffAfter)
-                .scrollContentBackground(.hidden)
-                .font(.system(size: 14))
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(.white)
-                )
-                .shadow(color: .init(white: 0.4, opacity: 0.4), radius: 5, x: 0, y: 0)
-            
-            Button {
-                showCodeDiff = false
-            } label: {
-                Image(systemName: "multiply.circle")
             }
-            .padding()
         }
     }
     

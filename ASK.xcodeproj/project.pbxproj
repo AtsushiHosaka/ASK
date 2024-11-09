@@ -37,6 +37,8 @@
 		6D7D56D32CDE572F002B793E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56D22CDE572F002B793E /* Message.swift */; };
 		6D7D56D42CDE572F002B793E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56D22CDE572F002B793E /* Message.swift */; };
 		6D7D56D82CDF24B9002B793E /* NewThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56D72CDF24B9002B793E /* NewThreadView.swift */; };
+		6D7D56DA2CDFB0F8002B793E /* String+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56D92CDFB0F8002B793E /* String+Utility.swift */; };
+		6D7D56E02CDFDCE3002B793E /* ThreadProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7D56DF2CDFDCE3002B793E /* ThreadProjectView.swift */; };
 		6D8DA1AF2CDBEFD3001923AB /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8DA1AE2CDBEFD3001923AB /* MainView.swift */; };
 		6D8DA1CA2CDCB0B8001923AB /* ProjectList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8DA1C92CDCB0B8001923AB /* ProjectList.swift */; };
 		6D8DA1DF2CDCB5BC001923AB /* ProjectListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8DA1DE2CDCB5BC001923AB /* ProjectListCell.swift */; };
@@ -164,6 +166,9 @@
 		6D70F84E2C97FFB900A8BC56 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		6D7D56D22CDE572F002B793E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		6D7D56D72CDF24B9002B793E /* NewThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewThreadView.swift; sourceTree = "<group>"; };
+		6D7D56D92CDFB0F8002B793E /* String+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Utility.swift"; sourceTree = "<group>"; };
+		6D7D56DE2CDFD791002B793E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6D7D56DF2CDFDCE3002B793E /* ThreadProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadProjectView.swift; sourceTree = "<group>"; };
 		6D8DA1AE2CDBEFD3001923AB /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		6D8DA1C92CDCB0B8001923AB /* ProjectList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectList.swift; sourceTree = "<group>"; };
 		6D8DA1DE2CDCB5BC001923AB /* ProjectListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListCell.swift; sourceTree = "<group>"; };
@@ -292,6 +297,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6D7D56DB2CDFB0FB002B793E /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				6D7D56D92CDFB0F8002B793E /* String+Utility.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		6D7D56E12CDFDCE7002B793E /* ThreadProjectView */ = {
+			isa = PBXGroup;
+			children = (
+				6D7D56DF2CDFDCE3002B793E /* ThreadProjectView.swift */,
+			);
+			path = ThreadProjectView;
+			sourceTree = "<group>";
+		};
 		6D8DA1B02CDBF050001923AB /* MainView */ = {
 			isa = PBXGroup;
 			children = (
@@ -411,6 +432,7 @@
 		6DBDD33C2C949C1D00BB959B /* ASK */ = {
 			isa = PBXGroup;
 			children = (
+				6D7D56DE2CDFD791002B793E /* Info.plist */,
 				6DBDD33D2C949C1D00BB959B /* ASKApp.swift */,
 				6DBDD5422C952DF000BB959B /* ContentView.swift */,
 				6DE7A35F2C97E47B003ADD5E /* ContentViewModel.swift */,
@@ -419,12 +441,14 @@
 				6D8DA1ED2CDCC26D001923AB /* ThreadList */,
 				6D8DA1FF2CDCCB7A001923AB /* ThreadView */,
 				6DBDD54B2C9535B200BB959B /* ChatView */,
+				6D7D56E12CDFDCE7002B793E /* ThreadProjectView */,
 				6DBDD54A2C95358F00BB959B /* Question */,
 				6DE7A3582C97ACE2003ADD5E /* Manager */,
 				6DE7A3532C97AB0E003ADD5E /* API */,
 				6DBDD3502C94A0B100BB959B /* Model */,
 				6DBDD5762C95583800BB959B /* Login */,
 				6DBDD3552C94A32500BB959B /* View */,
+				6D7D56DB2CDFB0FB002B793E /* Utility */,
 				6DBDD3432C949C1E00BB959B /* Assets.xcassets */,
 				6DBDD3482C949C1E00BB959B /* ASK.entitlements */,
 				6DBDD56D2C95516900BB959B /* GoogleService-Info.plist */,
@@ -742,6 +766,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DE7A33B2C977327003ADD5E /* AuthButton.swift in Sources */,
+				6D7D56DA2CDFB0F8002B793E /* String+Utility.swift in Sources */,
 				6D8DA2092CDD138F001923AB /* FirestoreProject.swift in Sources */,
 				6D8DA20B2CDD1398001923AB /* FirestoreThread.swift in Sources */,
 				6DE7A3482C978946003ADD5E /* UserIcon.swift in Sources */,
@@ -765,6 +790,7 @@
 				6DBDD3542C94A2B800BB959B /* FirestoreMessage.swift in Sources */,
 				6DBDD34F2C949FA600BB959B /* User.swift in Sources */,
 				6DE7A3442C978810003ADD5E /* MyMessageContent.swift in Sources */,
+				6D7D56E02CDFDCE3002B793E /* ThreadProjectView.swift in Sources */,
 				6DE7A34D2C97935E003ADD5E /* EditorButtonLabel.swift in Sources */,
 				6DBDD3522C94A0CA00BB959B /* Question.swift in Sources */,
 				6DBDD5492C9534B200BB959B /* QuestionRow.swift in Sources */,
@@ -974,6 +1000,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ASK/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1004,6 +1031,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ASK/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

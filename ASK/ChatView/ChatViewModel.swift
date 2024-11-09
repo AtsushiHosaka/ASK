@@ -9,7 +9,7 @@ import SwiftUI
 
 class ChatViewModel: ObservableObject {
     @Published var newMessageContent: String = ""
-    @Published var fileName: String = ""
+    @Published var filePath: String = ""
     @Published var code: String = ""
     @Published var replyMessage: Message? = nil
     @Published var codeDiffBefore: String = ""
@@ -19,7 +19,7 @@ class ChatViewModel: ObservableObject {
         var tempMessage = Message(date: Date(), content: newMessageContent, sentBy: LoginManager.loadUserUID()!)
             
         if !code.isEmpty {
-            tempMessage.fileName = fileName
+            tempMessage.filePath = filePath
             tempMessage.code = code
         }
         
@@ -39,7 +39,7 @@ class ChatViewModel: ObservableObject {
         }
         
         newMessageContent = ""
-        fileName = ""
+        filePath = ""
         code = ""
         replyMessage = nil
         codeDiffBefore = ""
@@ -66,7 +66,7 @@ class ChatViewModel: ObservableObject {
                 do {
                     let fileContents = try String(contentsOf: url, encoding: .utf8)
                     code = fileContents
-                    fileName = url.lastPathComponent
+                    filePath = url.lastPathComponent
                 } catch {
                     print("ファイルの読み込みに失敗しました: \(error)")
                 }

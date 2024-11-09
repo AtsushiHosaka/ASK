@@ -41,6 +41,32 @@ class FirestoreAPI {
     }
     
     //MARK: Thread-
+    static func addThread(toProjectID projectID: String, thread: Thread) async throws {
+        let firestoreThread = FirestoreThread(thread: thread)
+        
+        let documentReference = try db.collection("projects").document(projectID).collection("threadList").addDocument(from: firestoreThread)
+        
+        let threadID = documentReference.documentID
+        
+        for message in thread.chatMessages {
+            try await addMessageToFirestore(projectID: projectID, threadID: threadID, message: message)
+        }
+    }
+    
+    static func addThreadWithReturnThreadID(toProjectID projectID: String, thread: Thread) async throws -> String {
+        let firestoreThread = FirestoreThread(thread: thread)
+        
+        let documentReference = try db.collection("projects").document(projectID).collection("threadList").addDocument(from: firestoreThread)
+        
+        let threadID = documentReference.documentID
+        
+        for message in thread.chatMessages {
+            try await addMessageToFirestore(projectID: projectID, threadID: threadID, message: message)
+        }
+        
+        return threadID
+    }
+    
     static func fetchThreadList(projectID: String) async throws -> [Thread] {
         let snapshot = try await db.collection("projects").document(projectID).collection("threadList").getDocuments()
         

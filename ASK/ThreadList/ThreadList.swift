@@ -20,10 +20,10 @@ struct ThreadList: View {
             VStack(alignment: .leading) {
                 HStack(alignment: .center) {
                     VStack(alignment: .leading) {
-                        Text("ASK about \(project.projectPath)")
+                        Text("ASK about \(project.projectPath.extractLastPathComponent())")
                             .font(.custom("HelveticaNeue", size: 30))
                             .fontWeight(.heavy)
-                        Text("2024/01/01~")
+                        Text(project.createdAt.formatted(.dateTime))
                             .font(.custom("HelveticaNeue", size: 20))
                             .foregroundStyle(.secondary)
                     }
@@ -52,7 +52,7 @@ struct ThreadList: View {
                             .toolbar(.hidden)
 #endif
                     } label: {
-                        ThreadListCell(thread: thread)
+                        ThreadListCell(projectID: projectID, thread: thread)
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -67,7 +67,7 @@ struct ThreadList: View {
                     Spacer()
                     
                     NavigationLink {
-                        
+                        NewThreadView(projectID: projectID, projectPath: project.projectPath)
                     } label: {
                         ZStack {
                             Circle()
@@ -78,6 +78,7 @@ struct ThreadList: View {
                                 .font(.system(size: 24, weight: .heavy))
                         }
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
                 .padding()
             }

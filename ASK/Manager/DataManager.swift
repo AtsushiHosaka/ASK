@@ -27,6 +27,10 @@ class DataManager: ObservableObject {
         messageListeners.values.forEach { $0.remove() }
     }
     
+    func isListeningThreadList(ofProjectID projectID: String) -> Bool {
+        return threadListeners[projectID] != nil
+    }
+    
     func addProjectsListener() async {
         guard let userId = LoginManager.loadUserUID() else { return }
         DispatchQueue.main.async {

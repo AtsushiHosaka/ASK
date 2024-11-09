@@ -42,16 +42,16 @@ struct ThreadView: View {
                                 .font(.custom("HelveticaNeue", size: 25))
                                 .fontWeight(.heavy)
                             
-                            Text("○分前")
+                            Text("5分前")
                                 .font(.custom("HelveticaNeue", size: 15))
                                 .foregroundStyle(.secondary)
                         }
                         
                         Spacer()
                         
-                        Button(action: {
-                            
-                        }) {
+                        NavigationLink {
+                            ThreadProjectView(threadID: threadID, projectPath: project?.projectPath ?? "")
+                        } label: {
                             Image(systemName: "text.and.command.macwindow")
                                 .resizable()
                                 .scaledToFit()

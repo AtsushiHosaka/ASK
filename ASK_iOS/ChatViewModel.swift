@@ -9,7 +9,7 @@ import SwiftUI
 
 class ChatViewModel: ObservableObject {
     @Published var newMessageContent: String = ""
-    @Published var fileName: String = ""
+    @Published var filePath: String = ""
     @Published var code: String = ""
     @Published var replyMessage: Message? = nil
     @Published var codeDiffBefore: String = ""
@@ -19,7 +19,7 @@ class ChatViewModel: ObservableObject {
         var tempMessage = Message(date: Date(), content: newMessageContent, sentBy: LoginManager.loadUserUID()!)
             
         if !code.isEmpty {
-            tempMessage.fileName = fileName
+            tempMessage.fileName = filePath
             tempMessage.code = code
         }
         
@@ -39,7 +39,7 @@ class ChatViewModel: ObservableObject {
         }
         
         newMessageContent = ""
-        fileName = ""
+        filePath = ""
         code = ""
         replyMessage = nil
         codeDiffBefore = ""

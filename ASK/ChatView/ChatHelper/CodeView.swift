@@ -9,7 +9,7 @@ import SwiftUI
 import Splash
 
 struct CodeView: View {
-    var fileName: String
+    var filePath: String
     var code: String
     
     @Environment(\.colorScheme) var colorScheme
@@ -23,7 +23,7 @@ struct CodeView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            Text(fileName)
+            Text(filePath)
                 .padding(.leading, 10)
             ScrollView([.horizontal, .vertical]) {
                     Text(AttributedString(highlighter.highlight(code)))

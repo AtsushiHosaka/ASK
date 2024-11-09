@@ -15,19 +15,19 @@ struct FirestoreMessage: Codable {
     var content: String
     var sentBy: String
     
-    var fileName: String?
+    var filePath: String?
     var code: String?
     var codeDiffBefore: String?
     var codeDiffAfter: String?
     
     var replyTo: String?
     
-    init(id: String? = nil, date: Date, content: String, sentBy: String, fileName: String? = nil, code: String? = nil, codeDiffBefore: String? = nil, codeDiffAfter: String? = nil, replyTo: String? = nil) {
+    init(id: String? = nil, date: Date, content: String, sentBy: String, filePath: String? = nil, code: String? = nil, codeDiffBefore: String? = nil, codeDiffAfter: String? = nil, replyTo: String? = nil) {
         self.id = id
         self.date = date
         self.content = content
         self.sentBy = sentBy
-        self.fileName = fileName
+        self.filePath = filePath
         self.code = code
         self.codeDiffBefore = codeDiffBefore
         self.codeDiffAfter = codeDiffAfter
@@ -39,7 +39,7 @@ struct FirestoreMessage: Codable {
         self.date = message.date
         self.content = message.content
         self.sentBy = message.sentBy
-        self.fileName = message.fileName
+        self.filePath = message.filePath
         self.code = message.code
         self.codeDiffBefore = message.codeDiffBefore
         self.codeDiffAfter = message.codeDiffAfter

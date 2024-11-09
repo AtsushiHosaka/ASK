@@ -18,11 +18,13 @@ struct ProjectListCell: View {
                 .frame(width: 40, height: 40)
             
             VStack(alignment: .leading) {
-                Text(project.projectPath)
+                Text(project.projectPath.extractLastPathComponent())
                     .foregroundStyle(.primary)
                 Text(project.id)
                     .foregroundStyle(.secondary)
             }
+            
+            Spacer()
         }
         .padding()
         .background(Color.white.opacity(0.5).cornerRadius(10))

@@ -67,7 +67,7 @@ struct ChatView: View {
                         
                         VStack {
                             if !viewModel.code.isEmpty {
-                                CodeView(fileName: viewModel.fileName, code: viewModel.code)
+                                CodeView(filePath: viewModel.filePath, code: viewModel.code)
                             }
                             
                             bottomEditorView

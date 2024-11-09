@@ -16,7 +16,7 @@ struct NewProjectView: View {
     
     @State private var selectedImage: NSImage?
     @State private var imageData: Data?
-    @State private var selectedFileName: String = "プロジェクトを選択"
+    @State private var selectedFilePath: String = "プロジェクトを選択"
     @State private var selectedDirectry: String = ""
     @State private var selectediOSVersion = ""
     @State private var selectedEditor: EditorType = .Xcode
@@ -85,7 +85,7 @@ struct NewProjectView: View {
             Button(action: {
                 selectProjectFile()
             }) {
-                NewQuestionButton(icon: "filemenu.and.cursorarrow", text: selectedFileName)
+                NewQuestionButton(icon: "filemenu.and.cursorarrow", text: selectedFilePath)
                     .frame(maxWidth: 300)
             }
             .buttonStyle(ClearBackgroundButtonStyle())
@@ -132,8 +132,16 @@ struct NewProjectView: View {
         
         panel.begin { result in
             if result == .OK, let url = panel.url {
-                selectedFileName = url.lastPathComponent
-                selectedDirectry = url.absoluteString
+                // セキュリティスコープドアクセスのためにURLを保存
+                selectedFilePath = url.lastPathComponent
+                selectedDirectry = url.path  // absoluteStringではなくpathを使用
+                
+                // オプション: セキュリティスコープドブックマークを作成して保存
+                if let bookmarkData = try? url.bookmarkData(options: .withSecurityScope,
+                                                           includingResourceValuesForKeys: nil,
+                                                           relativeTo: nil) {
+                    UserDefaults.standard.set(bookmarkData, forKey: "ProjectDirectoryBookmark")
+                }
             }
         }
     }
@@ -169,6 +177,8 @@ struct NewProjectView: View {
                 let newProject = Project(id: UUID().uuidString, projectPath: selectedDirectry, iconImageName: imageName, createdAt: Date(), memberList: memberList, threadList: [Thread](), editorType: selectedEditor, editorVersion: editorVersionFloat, osVersion: osVersion, languageList: selectedLanguageTypes)
                 
                 try await FirestoreAPI.addProject(project: newProject)
+                
+                dismiss()
             } catch {
                 print(error.localizedDescription)
             }

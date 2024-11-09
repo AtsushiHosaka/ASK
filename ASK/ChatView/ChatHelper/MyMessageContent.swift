@@ -28,9 +28,9 @@ struct MyMessageContent: View {
                         )
                 }
                 
-                if let fileName = message.fileName,
+                if let filePath = message.filePath,
                    let code = message.code {
-                    CodeView(fileName: fileName, code: code)
+                    CodeView(filePath: filePath, code: code)
                         .frame(maxWidth: 400)
                 }
                 
